@@ -59,7 +59,7 @@ jobs:
             echo "No version changes were produced by bump script"
             exit 1
           fi
-          git commit -m "GitHub Actions: version bump to ${{ steps.version.outputs.new_version }} [skip ci]"
+          git commit -m "GitHub Actions: version bump to ${{ steps.version.outputs.new_version }}"
           git push
 
       - name: Check whether tag exists
