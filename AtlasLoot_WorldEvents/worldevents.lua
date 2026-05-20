@@ -547,9 +547,9 @@ AtlasLootWBBossButtons = {
 		{14, 64749, "", "=q4=Seethe", "=ds=#w4#", "", ""};
 		{15, 64747, "", "=q4=Mountain Breaker", "=ds=#w6#", "", ""};
 
-		{16, 90107, "", "=q4=Schematic: Stable Flamecore Engine", "=ds=#p5# (300)", "", ""};
+		-- {16, 90107, "", "=q4=Schematic: Stable Flamecore Engine", "=ds=#p5# (300)", "", ""};
 
-		{18, 65713, "", "=q3=Volchan's Burned-Out Husk", "", "", ""};
+		{16, 65713, "", "=q3=Volchan's Burned-Out Husk", "", "", ""};
 		Back = "WORLDBOSSMENU";
 	};
 
