@@ -293,6 +293,14 @@ function AtlasLootItem_ShowCompareItem()
    else
       item,link = AtlasLootTooltip:GetItem();
    end
+function AtlasLootMenuItem_OnClick(self)
+    if self.container then
+        AtlasLoot_ShowContainerFrame(self)
+    else
+        AtlasLoot_ShowBossLoot(self.lootpage)
+    end
+end
+
 
    if ( not link ) then
       return

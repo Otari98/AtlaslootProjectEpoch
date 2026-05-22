@@ -23,8 +23,7 @@ Hooks Atlas_OnShow() to add extra setup routines that AtlasLoot needs for
 integration purposes.
 ]]
 function AtlasLoot_Atlas_OnShow()
-    Atlas_Refresh();
-    
+    AtlasLoot_Refresh(true)
     --We don't want Atlas and the Loot Browser open at the same time, so the Loot Browser is close
     if AtlasLootDefaultFrame:IsShown() then
         AtlasLootDefaultFrame:Hide()
@@ -35,23 +34,15 @@ function AtlasLoot_Atlas_OnShow()
     --If we were looking at a loot table earlier in the session, it is still
     --saved on the item frame, so restore it in Atlas
     if AtlasLootItemsFrame.activeLootPage ~= nil then
-    else
-        --If no loot table is selected, set up icons next to boss names
-        for i=1,ATLAS_CUR_LINES do
-            if (getglobal("AtlasEntry"..i.."_Selected") and getglobal("AtlasEntry"..i.."_Selected"):IsVisible()) then
-                getglobal("AtlasEntry"..i.."_Loot"):Show();
-                getglobal("AtlasEntry"..i.."_Selected"):Hide();
-            end
-        end
         AtlasLootItemsFrame:Show()
     end
     --Consult the saved variable table to see whether to show the bottom panel
     if AtlasLoot.db.profile.HidePanel == true then
         AtlasLootPanel:Hide()
     else
-    pFrame = AtlasFrame;
         AtlasLootPanel:Show()
     end
+    AtlasLoot_AtlasScrollBar_Update()
 end
 
 --[[
@@ -59,198 +50,46 @@ AtlasLoot_Refresh:
 Replacement for Atlas_Refresh, required as the template for the boss buttons in Atlas is insufficient
 Called whenever the state of Atlas changes
 ]]
-function AtlasLoot_Refresh()
-    --Reset which loot page is 'current'
-    AtlasLootItemsFrame.activeLootPage = nil;
-
-    --Get map selection info from Atlas
-    local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone];
-    local data = AtlasMaps;
-    local base = {};
-    
-    --Get boss name information
-    for k,v in pairs(data[zoneID]) do
-        base[k] = v;
+function AtlasLoot_Refresh(keepSelection)
+    -- Reset which loot page is 'current'
+    if not keepSelection then
+        AtlasLootItemsFrame.activeBoss = nil
     end
-    
-    --Display the newly selected texture
-    AtlasMap:ClearAllPoints();
-    AtlasMap:SetWidth(512);
-    AtlasMap:SetHeight(512);
-    AtlasMap:SetPoint("TOPLEFT", "AtlasFrame", "TOPLEFT", 18, -84);
-    local builtIn = AtlasMap:SetTexture("Interface\\AddOns\\Atlas\\Images\\Maps\\"..zoneID);
-    
-    --If texture was not found in the core Atlas mod, check plugins
-    if ( not builtIn ) then
-        for k,v in pairs(ATLAS_PLUGINS) do
-            if ( AtlasMap:SetTexture("Interface\\AddOns\\"..v.."\\Images\\"..zoneID) ) then
-                break;
-            end
-        end
-    end
-    
-    --Setup info panel above boss listing
-    local tName = base.ZoneName[1];
-    if ( AtlasOptions.AtlasAcronyms and base.Acronym ~= nil) then
-        local _RED = "|cffcc6666";
-        tName = tName.._RED.." ["..base.Acronym.."]";
-    end
-    AtlasText_ZoneName_Text:SetText(tName);
-    
-    local tLoc = "";
-    local tLR = "";
-    local tML = "";
-    local tPL = "";
-    if ( base.Location ) then
-        tLoc = ATLAS_STRING_LOCATION..": "..base.Location[1];
-    end
-    if ( base.LevelRange ) then
-        tLR = ATLAS_STRING_LEVELRANGE..": "..base.LevelRange;
-    end
-    if ( base.MinLevel ) then
-		tML = ATLAS_STRING_MINLEVEL..": "..base.MinLevel;
-	end
-    if ( base.PlayerLimit ) then
-        tPL = ATLAS_STRING_PLAYERLIMIT..": "..base.PlayerLimit;
-    end
-    AtlasText_Location_Text:SetText(tLoc);
-    AtlasText_LevelRange_Text:SetText(tLR);
-    AtlasText_MinLevel_Text:SetText(tML);
-    AtlasText_PlayerLimit_Text:SetText(tPL);
-    
-    Atlastextbase = base;
-    --Get the size of the Atlas text to append stuff to the bottom.  Looks for empty lines
-	--[[
-    local i = 1;
-    local j = 2;
-    while ( (Atlastextbase[i] ~= nil and Atlastextbase[i]~="") or (Atlastextbase[j] ~= nil and Atlastextbase[j]~="")) do
-        i = i + 1;
-        j = i + 1;
-    end
-    --Allow AtlasLoot to append any extra 'boss' entries needed to a map
-    if AtlasLoot_ExtraText[zoneID] ~= nil then
-        --Workaround for Old Hillsbrad, we don't want the Trash Mobs stuck under the 'flavour' NPCS
-        if zoneID == "CoTOldHillsbrad" then
-		    Atlastextbase[22][1] = GREY..ATLASLOOT_INDENT..AL["Trash Mobs"];
-        else
-            for k,v in ipairs(AtlasLoot_ExtraText[zoneID]) do
-                j = i + 1;
-                --If the line after the empty line is not empty itself, all text below this point is shuffled down to make room
-                if Atlastextbase[i]~=nil and Atlastextbase[i]~="" then
-                    Atlastextbase[j] = Atlastextbase[i];
-                end
-                Atlastextbase[i]={v, nil, nil};
-                i = i + 1;
-            end
-            Atlastextbase[i]={"", nil, nil};
-        end
-    end
-	]]--
-	if AtlasLoot_ExtraText[zoneID] and #Atlastextbase and #Atlastextbase > 0 then
-		local numContent = #Atlastextbase
-		-- add the extra lines
-		for i = 1,#AtlasLoot_ExtraText[zoneID]+1 do
-			Atlastextbase[numContent+i] = {"", nil, nil}
-		end
-		for k,v in ipairs(AtlasLoot_ExtraText[zoneID]) do
-			numContent = numContent + 1
-			Atlastextbase[numContent] = {v, nil, nil}
-		end
-		Atlastextbase[numContent+2]={"", nil, nil}
-	end
-	
-	
-    
-    --Hide any Atlas objects lurking around that have now been replaced
-    for i=1,ATLAS_CUR_LINES do
-        if ( getglobal("AtlasEntry"..i) ) then
-            getglobal("AtlasEntry"..i):Hide();
-        end
-    end
-    
-    ATLAS_DATA = Atlastextbase;
-    ATLAS_SEARCH_METHOD = data.Search;
-    --Deal with Atlas's search function
-    if ( data.Search == nil ) then
-        ATLAS_SEARCH_METHOD = AtlasSimpleSearch;
-    end
-    
-    if ( data.Search ~= false ) then
-        AtlasSearchEditBox:Show();
-        AtlasNoSearch:Hide();
+    if AtlasLootItemsFrame.activeBoss then
+        AtlasLootItemsFrame:Show()
     else
-        AtlasSearchEditBox:Hide();
-        AtlasNoSearch:Show();
-        ATLAS_SEARCH_METHOD = nil;
+        AtlasLootItemsFrame:Hide()
     end
 
-    --populate the scroll frame entries list, the update func will do the rest
-    Atlas_Search("");
-    AtlasSearchEditBox:SetText("");
-    AtlasSearchEditBox:ClearFocus();
-    
-    --create and align any new entry buttons that we need
-    for i=1,ATLAS_CUR_LINES do
-        local f;
-        if (not getglobal("AtlasBossLine"..i)) then
-            f = CreateFrame("Button", "AtlasBossLine"..i, AtlasFrame, "AtlasLootNewBossLineTemplate");
-            f:SetFrameStrata("HIGH");
-            if i==1 then
-                f:SetPoint("TOPLEFT", "AtlasScrollBar", "TOPLEFT", 16, -3);
-            else
-                f:SetPoint("TOPLEFT", "AtlasBossLine"..(i-1), "BOTTOMLEFT");
-            end
-        else
-            getglobal("AtlasBossLine"..i.."_Loot"):Hide();
-            getglobal("AtlasBossLine"..i.."_Selected"):Hide();
+    local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone]
+    if AtlasLoot_ExtraText[zoneID] then
+        for i = 1, #AtlasLoot_ExtraText[zoneID] do
+            table.insert(AtlasMaps[zoneID], { AtlasLoot_ExtraText[zoneID][i] })
+        end
+        AtlasLoot_ExtraText[zoneID] = nil
+    end
+
+    -- Call original function
+    Hooked_Atlas_Refresh()
+
+    for i = 1, ATLAS_NUM_LINES do
+        local entry = _G["AtlasEntry"..i]
+        if entry and not _G["AtlasEntry"..i.."_Loot"] then
+            -- Add icon
+            local icon = entry:CreateTexture("$parent_Loot", "OVERLAY")
+            icon:SetWidth(16)
+            icon:SetHeight(16)
+            icon:SetPoint("RIGHT", entry, 0, 0)
+            icon:SetTexture("Interface\\AddOns\\AtlasLoot\\Images\\silver")
+            icon:Show()
+            -- Add OnClick function
+            entry:SetScript("OnClick", AtlasLootBoss_OnClick)
+            -- Fit text and add highlight
+            _G["AtlasEntry"..i.."_Text"]:SetWidth(310)
+            entry:SetHighlightTexture("Interface\\QuestFrame\\UI-QuestTitleHighlight")
+            entry.selected = false
         end
     end
-    
-    --Hide the loot frame now that a pristine Atlas instance is created
-    AtlasLootItemsFrame:Hide();
-    Atlas_Search("");
-    --Make sure the scroll bar is correctly offset
-    AtlasLoot_AtlasScrollBar_Update();
-	
-	--see if we should display the entrance/instance button or not, and decide what it should say
-	local matchFound = {nil};
-	local sayEntrance = nil;
-	for k,v in pairs(Atlas_EntToInstMatches) do
-		if ( k == zoneID ) then
-			matchFound = v;
-			sayEntrance = false;
-		end
-	end
-	if ( not matchFound[1] ) then
-		for k,v in pairs(Atlas_InstToEntMatches) do
-			if ( k == zoneID ) then
-				matchFound = v;
-				sayEntrance = true;
-			end
-		end
-	end
-	
-	--set the button's text, populate the dropdown menu, and show or hide the button
-	if ( matchFound[1] ~= nil ) then
-		ATLAS_INST_ENT_DROPDOWN = {};
-		for k,v in pairs(matchFound) do
-			table.insert(ATLAS_INST_ENT_DROPDOWN, v);
-		end
-		table.sort(ATLAS_INST_ENT_DROPDOWN, AtlasSwitchDD_Sort);
-		if ( sayEntrance ) then
-			AtlasSwitchButton:SetText(ATLAS_ENTRANCE_BUTTON);
-		else
-			AtlasSwitchButton:SetText(ATLAS_INSTANCE_BUTTON);
-		end
-		AtlasSwitchButton:Show();
-		UIDropDownMenu_Initialize(AtlasSwitchDD, AtlasSwitchDD_OnLoad);
-	else
-		AtlasSwitchButton:Hide();
-	end
-	
-	if ( TitanPanelButton_UpdateButton ) then
-		TitanPanelButton_UpdateButton("Atlas");
-	end
 end
 
 function AtlasLoot_Atlas_Search(text)
@@ -285,57 +124,59 @@ function AtlasLoot_Atlas_Search(text)
     ATLAS_CUR_LINES = i - 1
 end
 
+function AtlasSimpleSearch(data, text)
+    local new = {}
+    local search_text = string.lower(text)
+    for i = 1, #data do
+        if string.find(string.lower(data[i][1]), search_text, 1, true) then
+            table.insert(new, data[i])
+        end
+    end
+    return new
+end
 
 --[[
 AtlasLoot_AtlasScrollBar_Update:
 Hooks the Atlas scroll frame.
 Required as the Atlas function cannot deal with the AtlasLoot button template or the added Atlasloot entries
 ]]
+local buttons = { AtlasLootBossButtons, AtlasLootWBBossButtons, AtlasLootBattlegrounds }
 function AtlasLoot_AtlasScrollBar_Update()
-    local line, lineplusoffset, originalLineNumber;
-    if (getglobal("AtlasBossLine1_Text") ~= nil) then
-        if not AtlasLootWBBossButtons then
-            pcall(LoadAddOn, "AtlasLoot_WorldEvents");
-        end
-        local worldBossButtons = AtlasLootWBBossButtons or {};
-        local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone];
-        --Update the contents of the Atlas scroll frame
-        FauxScrollFrame_Update(AtlasScrollBar,ATLAS_CUR_LINES,ATLAS_LOOT_BOSS_LINES,15);
-        --Make note of how far in the scroll frame we are
-        for line=1,ATLAS_NUM_LINES do
-            lineplusoffset = line + FauxScrollFrame_GetOffset(AtlasScrollBar);
-            originalLineNumber = BOSS_SCROLL_LIST[lineplusoffset]; -- Original line number before filtering/sorting.
-            if ( lineplusoffset <= ATLAS_CUR_LINES ) then
-                local lootPageForThisLine = nil;
-                getglobal("AtlasBossLine"..line.."_Text"):SetText(ATLAS_SCROLL_LIST[lineplusoffset]);
+    Hooked_AtlasScrollBar_Update()
+    local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone]
 
-                for _, dataSource in ipairs({AtlasLootBossButtons, worldBossButtons, AtlasLootBattlegrounds}) do
-                    if (dataSource[zoneID]~=nil and dataSource[zoneID][originalLineNumber] ~= nil and dataSource[zoneID][originalLineNumber] ~= "") then
-                        lootPageForThisLine = dataSource[zoneID][originalLineNumber];
-                    end
+    --Make note of how far in the scroll frame we are
+    for i = 1, ATLAS_NUM_LINES do
+        local index = i + FauxScrollFrame_GetOffset(AtlasScrollBar)
+        local entry = _G["AtlasEntry"..i]
+        local loot = _G["AtlasEntry"..i.."_Loot"]
+        local originalIndex = BOSS_SCROLL_LIST[index] -- Original line number before filtering/sorting.
+        if loot and originalIndex and index <= ATLAS_CUR_LINES then
+            local lootPage
+            for _, dataSource in ipairs(buttons) do
+                if dataSource[zoneID] and dataSource[zoneID][originalIndex] and dataSource[zoneID][originalIndex] ~= "" then
+                    lootPage = dataSource[zoneID][originalIndex]
+                    break
                 end
-
-                if lootPageForThisLine == nil then
-                    getglobal("AtlasBossLine"..line.."_Loot"):Hide();
-                    getglobal("AtlasBossLine"..line.."_Selected"):Hide();
-                else
-                    getglobal("AtlasBossLine"..line.."_Loot"):Show();
-                    if lootPageForThisLine == AtlasLootItemsFrame.activeLootPage then
-                        getglobal("AtlasBossLine"..line.."_Selected"):Show();
-                    else
-                        getglobal("AtlasBossLine"..line.."_Selected"):Hide();
-                    end
-                end
-
-                getglobal("AtlasBossLine"..line).idnum = originalLineNumber;
-                getglobal("AtlasBossLine"..line):Show();
-            elseif ( getglobal("AtlasBossLine"..line) ) then
-                --Hide lines that are not needed
-                getglobal("AtlasBossLine"..line):Hide();
             end
+            if lootPage then
+                loot:Show()
+                entry:Enable()
+                if lootPage == AtlasLootItemsFrame.activeLootPage then
+                    loot:SetTexture("Interface\\AddOns\\AtlasLoot\\Images\\gold")
+                    entry.selected = true
+                else
+                    loot:SetTexture("Interface\\AddOns\\AtlasLoot\\Images\\silver")
+                    entry.selected = false
+                end
+            else
+                loot:Hide()
+                entry:Disable()
+            end
+
+            _G["AtlasEntry"..i.."_Text"]:SetText(ATLAS_SCROLL_LIST[index])
+            entry.originalIndex = originalIndex
         end
-    else
-        Hooked_AtlasScrollBar_Update();
     end
 end
 

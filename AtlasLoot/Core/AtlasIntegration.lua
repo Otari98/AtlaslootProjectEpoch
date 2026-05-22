@@ -2,8 +2,6 @@
 This file contains all the Atlas specific functions
 ]]
 
-local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-
 --[[
 AtlasLoot_SetupForAtlas:
 This function sets up the Atlas specific XML objects
@@ -29,52 +27,28 @@ AtlasLootBoss_OnClick:
 Invoked whenever a boss line in Atlas is clicked
 Shows a loot page if one is associated with the button
 ]]
-function AtlasLootBoss_OnClick(name)
-    
-    
-    
-    local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone];
-    local id = this.idnum;
+local buttons = { AtlasLootBossButtons, AtlasLootWBBossButtons, AtlasLootBattlegrounds }
+function AtlasLootBoss_OnClick(self)
+    local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone]
+    local id = self.originalIndex
 
-    if not AtlasLootWBBossButtons then
-        pcall(LoadAddOn, "AtlasLoot_WorldEvents");
-    end
-    local worldBossButtons = AtlasLootWBBossButtons or {};
-
-
-    
-    
     --If the loot table was already shown and boss clicked again, hide the loot table and fix boss list icons
-    if getglobal(name.."_Selected"):IsVisible() then
-        getglobal(name.."_Selected"):Hide();
-        getglobal(name.."_Loot"):Show();
-        AtlasLootItemsFrame:Hide();
-        AtlasLootItemsFrame.activeLootPage = nil;
-        AtlasLoot_AtlasScrollBar_Update();
-    else    
-        local dataSource, lootPage = nil;
-        --If a loot table is associated with the button, show it.  Note multiple tables need to be checked due to the database structure
-        if (AtlasLootBossButtons[zoneID] ~= nil and AtlasLootBossButtons[zoneID][id] ~= nil and AtlasLootBossButtons[zoneID][id] ~= "") then
-            if AtlasLoot_IsLootTableAvailable(AtlasLootBossButtons[zoneID][id]) then
-                dataSource = AtlasLootBossButtons;
-            end
-        elseif (worldBossButtons[zoneID] ~= nil and worldBossButtons[zoneID][id] ~= nil and worldBossButtons[zoneID][id] ~= "") then
-            if AtlasLoot_IsLootTableAvailable(worldBossButtons[zoneID][id]) then
-                dataSource = worldBossButtons;
-            end
-        elseif (AtlasLootBattlegrounds[zoneID] ~= nil and AtlasLootBattlegrounds[zoneID][id] ~= nil and AtlasLootBattlegrounds[zoneID][id] ~= "") then
-            if AtlasLoot_IsLootTableAvailable(AtlasLootBattlegrounds[zoneID][id]) then
-                dataSource = AtlasLootBattlegrounds;
+    if self.selected then
+        AtlasLootItemsFrame:Hide()
+        AtlasLootItemsFrame.activeLootPage = nil
+        AtlasLoot_AtlasScrollBar_Update()
+    else
+        local lootPage
+        for _, dataSource in ipairs(buttons) do
+            if dataSource[zoneID] and dataSource[zoneID][id] and dataSource[zoneID][id] ~= "" then
+                lootPage = dataSource[zoneID][id]
+                break
             end
         end
-        if dataSource then
-            lootPage = dataSource[zoneID][id];
-
-            -- Show the active loot page
-            local _,_,boss = string.find(getglobal(name.."_Text"):GetText(), "|c%x%x%x%x%x%x%x%x%s*[%dX']*[%) ]*(.*[^%,])[%,]?$");
-            AtlasLoot_ShowBossLoot(lootPage, boss, AtlasFrame);
-            AtlasLootItemsFrame.activeLootPage = lootPage;
-            AtlasLoot_AtlasScrollBar_Update();
+        if lootPage then
+            AtlasLootItemsFrame.activeLootPage = lootPage
+            AtlasLoot_ShowBossLoot(lootPage)
+            AtlasLoot_AtlasScrollBar_Update()
         end
     end
 

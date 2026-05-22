@@ -63,12 +63,6 @@ AtlasLoot_DewdropSubMenu = AceLibrary("Dewdrop-2.0")
 ATLASLOOT_DEBUGSHOWN = false
 
 -- Colours stored for code readability
-
---Establish number of boss lines in the Atlas frame for scrolling
-local ATLAS_LOOT_BOSS_LINES	= 25;
-
---Flag so that error messages do not spam
-local ATLASLOOT_POPUPSHOWN = false;
 local GREY = "|cff999999"
 local RED = "|cffff0000"
 local WHITE = "|cffFFFFFF"
@@ -843,9 +837,6 @@ pFrame - Where to anchor the menu
 This function allows menus to be defined in essentially the same way as
 normal loot tables
 ]]
-    local extra;
-    local text;
-    local dataSource = AtlasLoot_Data;
 function AtlasLoot_GenerateAtlasMenu(dataID)
 	AtlasLoot.db.profile.LastBoss = dataID
 
@@ -1077,6 +1068,9 @@ function AtlasLoot_IsLootTableAvailable(dataID)
 			DEFAULT_CHAT_FRAME:AddMessage(RED..AL["AtlasLoot Error!"].." "..ORANGE..AtlasLoot_TableNames[dataID][1]..WHITE..AL[" could not be accessed, the following module may be out of date: "]..ORANGE..moduleName)
 			return false
 		end
+	else
+		DEFAULT_CHAT_FRAME:AddMessage(RED..AL["AtlasLoot Error!"].." "..ORANGE..AL["Loot module returned as nil!"])
+		return false
 	end
 end
 

@@ -120,7 +120,7 @@ function AtlasLootDefaultFrame_OnShow()
     if AtlasLootItemsFrame.refresh then
         AtlasLoot_ShowBossLoot(AtlasLootItemsFrame.refresh[1])
     else
-        AtlasLoot_ShowBossLoot("EmptyTable", AL["Select a Loot Table..."], pFrame);
+        AtlasLoot_ShowBossLoot(AtlasLoot.db.profile.LastBoss)
     end
 end
 
