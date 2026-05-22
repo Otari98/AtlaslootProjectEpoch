@@ -5,7 +5,7 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 local BabbleZone = AtlasLoot_GetLocaleLibBabble("LibBabble-Zone-3.0")
 
 AtlasLoot_Data["SETMENU"] = {
-	{ 1, "SETSCLASSIC", "INV_Sword_43", "=ds=Misc Tier 0 & Tier 0.5", "" },
+	{ 1, "SETSCLASSIC", "INV_Sword_43", "=ds=Misc Dungeon Sets", "" },
 	{ 2, "WORLDEPICS", "INV_Sword_76", "=ds="..AL["BoE World Epics"], "" },
 	{ 4, "OldKeys", "inv_misc_key_14", "=ds=Keys", "" },
 	{ 5, "Tabards1", "INV_Shirt_GuildTabard_01", "=ds="..AL["Tabards"], "" },
