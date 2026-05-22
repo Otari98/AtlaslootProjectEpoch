@@ -127,7 +127,7 @@ lib:SetBaseTranslations {
 	["Miner Davod"] = "Miner Davod",
 	["Mirage Raceway"] = "Mirage Raceway",
 	["Misc. Vendor"] = "Misc. Vendor",
-	["Misc Dungeon Sets"] = "Misc Dungeon Sets",
+	["Misc Tier 0 & Tier 0.5"] = "Misc Tier 0 & Tier 0.5",
 	Morrumus = "Morrumus",
 	["Mount Drops"] = "Mount Drops",
 	Muggugaj = "Muggugaj",

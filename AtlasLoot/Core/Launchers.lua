@@ -43,7 +43,7 @@ end
 	    if IsAddOnLoaded("FuBar") then
             AtlasLootMinimapButtonFrame:SetPoint("CENTER", "UIParent", "CENTER");
             AtlasLootMinimapButtonFrame:Hide();
-        elseif(AtlasLoot.db.profile.MinimapButton == true) then
+        elseif AtlasLoot.db.profile.MinimapButton == true then
             AtlasLootMinimapButtonFrame:SetPoint("TOPLEFT","Minimap","TOPLEFT",54 - (78 * cos(AtlasLoot.db.profile.MinimapButtonAngle)),(78 * sin(AtlasLoot.db.profile.MinimapButtonAngle)) - 55);
 		    AtlasLootMinimapButtonFrame:Show();
 	    else
@@ -65,17 +65,17 @@ end
 -- Thanks to Yatlas and Atlas for this code
 function AtlasLoot_MinimapButtonBeingDragged()
     -- Thanks to Gello and Dan Gilbert for this code
-    local xpos,ypos = GetCursorPosition() 
-    local xmin,ymin = Minimap:GetLeft(), Minimap:GetBottom() 
+    local xpos,ypos = GetCursorPosition()
+    local xmin,ymin = Minimap:GetLeft(), Minimap:GetBottom()
 
-    xpos = xmin-xpos/UIParent:GetScale()+70 
-    ypos = ypos/UIParent:GetScale()-ymin-70 
+    xpos = xmin-xpos/UIParent:GetScale()+70
+    ypos = ypos/UIParent:GetScale()-ymin-70
 
     AtlasLoot_MinimapButtonSetPosition(math.deg(math.atan2(ypos,xpos)));
 end
 
 function AtlasLoot_MinimapButtonSetPosition(v)
-    if(v < 0) then
+    if v < 0 then
         v = v + 360;
     end
 
@@ -92,7 +92,7 @@ function AtlasLoot_MinimapButtonUpdatePosition()
 		54 - (radius * cos(AtlasLoot.db.profile.MinimapButtonAngle)),
 		(radius * sin(AtlasLoot.db.profile.MinimapButtonAngle)) - 55
 	);
-    if(AtlasLoot.db.profile.MinimapButton == true) then
+    if AtlasLoot.db.profile.MinimapButton == true then
         AtlasLootMinimapButtonFrame:Show();
     else
         AtlasLootMinimapButtonFrame:Hide();
@@ -104,7 +104,7 @@ end]]
         AtlasLootMinimapButtonFrame:SetPoint("CENTER", "UIParent", "CENTER");
         AtlasLootMinimapButtonFrame:Hide();
     end
-    
+
     AtlasLootFu = LibStub("AceAddon-3.0"):NewAddon("AtlasLootFu");
 
     AceDB = LibStub("AceDB-3.0");
@@ -139,9 +139,9 @@ end]]
         --Right click -> standard FuBar options
         AtlasLoot_OnBarButtonClick(button);
     end
-    
+
     function AtlasLootFu:OpenMenu()
         AtlasLootOptions_Toggle();
     end
-    
+
 end]]

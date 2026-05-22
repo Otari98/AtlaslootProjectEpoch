@@ -4,7 +4,7 @@ Defines the table listings for the dropdown lists.
 ]]
 
 --Invoke all libraries
-local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
+local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
 local BabbleBoss = AtlasLoot_GetLocaleLibBabble("LibBabble-Boss-3.0")
 local BabbleEpoch = AtlasLoot_GetLocaleLibBabble("LibBabble-Epoch-3.0")
 local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
@@ -14,130 +14,66 @@ local BabbleInventory = AtlasLoot_GetLocaleLibBabble("LibBabble-Inventory-3.0")
 --This is a multi-layer table defining the main loot listing.
 --Entries have the text to display, loot table or sub table to link to and if the link is to a loot table or sub table
 AtlasLoot_DewDropDown = {
-	[1] = {
+	{
 		[AL["Classic Instances"]] = {
-			[1] = {
-				{ BabbleEpoch["Baradin Hold"], "BaradinHold", "Submenu" },
-			},
-			[2] = {
-				{ BabbleZone["Blackfathom Deeps"], "BlackfathomDeeps1", "Table" },
-			},
-			[3] = {
-				{ BabbleZone["Blackrock Depths"], "BlackrockDepths", "Submenu" },
-			},
-			[4] = {
-				{ BabbleEpoch["New Dungeon"], "NewDungeon", "Table" },
-			},
-			[5] = {
-				{ BabbleZone["Lower Blackrock Spire"], "LowerBlackrock", "Submenu" },
-			},
-			[6] = {
-				{ BabbleZone["Upper Blackrock Spire"], "UpperBlackrock", "Submenu" },
-			},
-			[7] = {
-				{ BabbleZone["The Deadmines"], "TheDeadmines1", "Table" },
-			},
-			[8] = {
-				{ BabbleEpoch["Glittermurk Mines"], "Glittermurk", "Table" },
-			},
-			[9] = {
-				{ BabbleZone["Gnomeregan"], "Gnomeregan1", "Table" },
-			},
-			[10] = {
-				{ BabbleZone["Maraudon"], "Maraudon1", "Table" },
-			},
-			[11] = {
-				{ BabbleZone["Ragefire Chasm"], "RagefireChasm", "Table" },
-			},
-			[12] = {
-				{ BabbleZone["Razorfen Downs"], "RazorfenDowns1", "Table" },
-			},
-			[13] = {
-				{ BabbleZone["Razorfen Kraul"], "RazorfenKraul1", "Table" },
-			},
-			[14] = {
-				{ BabbleZone["Scarlet Monastery"], "Scarlet Monastery", "Submenu" },
-			},
-			[15] = {
-				{ BabbleZone["Scholomance"], "Scholomance", "Submenu" },
-			},
-			[16] = {
-				{ BabbleZone["Shadowfang Keep"], "ShadowfangKeep1", "Table" },
-			},
-			[17] = {
-				{ BabbleZone["The Stockade"], "TheStockade", "Table" },
-			},
-			[18] = {
-				{ BabbleEpoch["Stonetalon Caverns"], "StonetalonCaverns", "Table" },
-			},
-			[19] = {
-				{ BabbleZone["Stratholme"], "Stratholme", "Submenu" },
-			},
-			[20] = {
-				{ BabbleZone["The Temple of Atal'Hakkar"], "SunkenTemple", "Submenu" },
-			},
-			[21] = {
-				{ BabbleZone["Uldaman"], "Uldaman", "Submenu" },
-			},
-			[22] = {
-				{ BabbleZone["Wailing Caverns"], "WailingCaverns1", "Table" },
-			},
-			[23] = {
-				{ BabbleZone["Zul'Farrak"], "ZulFarrak", "Submenu" },
-			},
+			{ { BabbleEpoch["Baradin Hold"], "BaradinHold", "Submenu" }, },
+			{ { BabbleZone["Blackfathom Deeps"], "BlackfathomDeeps1", "Table" }, },
+			{ { BabbleZone["Blackrock Depths"], "BlackrockDepths", "Submenu" }, },
+			{ { BabbleZone["Lower Blackrock Spire"], "LowerBlackrock", "Submenu" }, },
+			{ { BabbleZone["Upper Blackrock Spire"], "UpperBlackrock", "Submenu" }, },
+			{ { BabbleZone["The Deadmines"], "TheDeadmines1", "Table" }, },
+			{ { BabbleEpoch["Glittermurk Mines"], "Glittermurk", "Table" }, },
+			{ { BabbleZone["Gnomeregan"], "Gnomeregan1", "Table" }, },
+			{ { BabbleZone["Maraudon"], "Maraudon1", "Table" }, },
+			{ { BabbleZone["Ragefire Chasm"], "RagefireChasm", "Table" }, },
+			{ { BabbleZone["Razorfen Downs"], "RazorfenDowns1", "Table" }, },
+			{ { BabbleZone["Razorfen Kraul"], "RazorfenKraul1", "Table" }, },
+			{ { BabbleZone["Scarlet Monastery"], "Scarlet Monastery", "Submenu" }, },
+			{ { BabbleZone["Scholomance"], "Scholomance", "Submenu" }, },
+			{ { BabbleZone["Shadowfang Keep"], "ShadowfangKeep1", "Table" }, },
+			{ { BabbleZone["The Stockade"], "TheStockade", "Table" }, },
+			{ { BabbleEpoch["Stonetalon Caverns"], "StonetalonCaverns", "Table" }, },
+			{ { BabbleZone["Stratholme"], "Stratholme", "Submenu" }, },
+			{ { BabbleZone["The Temple of Atal'Hakkar"], "SunkenTemple", "Submenu" }, },
+			{ { BabbleZone["Uldaman"], "Uldaman", "Submenu" }, },
+			{ { BabbleZone["Wailing Caverns"], "WailingCaverns1", "Table" }, },
+			{ { BabbleZone["Zul'Farrak"], "ZulFarrak", "Submenu" }, },
 		},
 	},
-	[2] = {
+	{
 		[AL["Raids"]] = {
-			[1] = {
-				{ BabbleZone["Onyxia's Lair"], "OnyxiasLair", "Submenu" },
-			},
-			[2] = {
-				{ BabbleZone["Molten Core"], "MoltenCore", "Submenu" },
-			},
+			{ { BabbleZone["Onyxia's Lair"], "OnyxiasLair", "Submenu" }, },
+			{ { BabbleZone["Molten Core"], "MoltenCore", "Submenu" }, },
 		},
 	},
-	[3] = {
-		[AL["World Bosses"]] = {
-			[1] = {
-				{ BabbleEpoch["Corrupted Ancient"], "Corruptedancient", "Table" },
-			},
-			[2] = {
-				{ BabbleEpoch["Gonzor"], "Gonzor", "Table" },
-			},
-			[3] = {
-				{ BabbleEpoch["King Gnok"], "Kinggnok", "Table" },
-			},
-			[4] = {
-				{ BabbleEpoch["King Mosh"], "KingMosh", "Table" },
-			},
-			[5] = {
-				{ BabbleEpoch["Silithid Lurker"], "Silithidlurker", "Table" },
-			},
-			[6] = {
-				{ BabbleEpoch["Volchan"], "Volchan", "Table" },
-			},
-			[7] = {
-				{ BabbleEpoch["Lord Kazzak"], "LordKazzak", "Table" },
-			},
-		},
+	{
+		{ AL["World Bosses"], "WORLDBOSSMENU", "Table" }
+		-- [AL["World Bosses"]] = {
+		-- 	{ { BabbleEpoch["Corrupted Ancient"], "Corruptedancient", "Table" }, },
+		-- 	{ { BabbleEpoch["Gonzor"], "Gonzor", "Table" }, },
+		-- 	{ { BabbleEpoch["King Gnok"], "Kinggnok", "Table" }, },
+		-- 	{ { BabbleEpoch["King Mosh"], "KingMosh", "Table" }, },
+		-- 	{ { BabbleEpoch["Silithid Lurker"], "Silithidlurker", "Table" }, },
+		-- 	{ { BabbleEpoch["Volchan"], "Volchan", "Table" }, },
+		-- 	{ { BabbleEpoch["Lord Kazzak"], "LordKazzak", "Table" }, },
+		-- },
 	},
-	[4] = {
+	{
 		{ AL["Crafting"], "CRAFTINGMENU", "Table" },
 	},
-	[5] = {
+	{
 		{ AL["Sets/Collections"], "SETMENU", "Table" },
 	},
-	[6] = {
+	{
 		{ AL["PvP Rewards"], "PVPMENU", "Table" },
 	},
-	[7] = {
+	{
 		{ AL["Reputation Factions"], "REPMENU", "Table" },
 	},
-	[8] = {
+	{
 		{ AL["World Events"], "WORLDEVENTMENU", "Table" },
 	},
-};
+}
 
 --This table defines all the subtables needed for the full menu
 --Each sub table entry contains the text entry and the loot table that goes wih it
@@ -154,7 +90,7 @@ AtlasLoot_DewDropDown_SubTables = {
 		{ "", "BHCalypso" },
 		{ "", "BHPirateLordBlackstone" },
 		{ "", "BHRares" },
-		{"", "Epochset" },
+		{ "", "Epochset" },
 	},
 	["BlackrockDepths"] = {
 		{ "", "BRDLordRoccor" },
@@ -296,7 +232,7 @@ AtlasLoot_DewDropDown_SubTables = {
 		{ AtlasLoot_TableNames["STTrollMinibosses"][1], "STTrollMinibosses" },
 		{ BabbleBoss["Atal'alarion"], "STAtalalarion" },
 		{ BabbleBoss["Dreamscythe"], "STDreamscythe" },
-		{ BabbleBoss["Weaver"], "STWeaver"},
+		{ BabbleBoss["Weaver"], "STWeaver" },
 		{ BabbleBoss["Avatar of Hakkar"], "STAvatarofHakkar" },
 		{ BabbleBoss["Jammal'an the Prophet"], "STJammalan" },
 		{ BabbleBoss["Ogom the Wretched"], "STOgom" },
@@ -332,4 +268,4 @@ AtlasLoot_DewDropDown_SubTables = {
 		{ BabbleBoss["Zerillis"], "ZFZerillis" },
 		{ AL["Trash Mobs"], "ZFTrash" },
 	},
-};
+}

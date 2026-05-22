@@ -2,20 +2,20 @@
 File containing all the Atlas replacement functions and the External API
 ]]
 
-local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
+local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
 
 -- Colours stored for code readability
-local GREY = "|cff999999";
-local RED = "|cffff0000";
-local WHITE = "|cffFFFFFF";
-local GREEN = "|cff1eff00";
-local PURPLE = "|cff9F3FFF";
-local BLUE = "|cff0070dd";
-local ORANGE = "|cffFF8400";
+local GREY = "|cff999999"
+local RED = "|cffff0000"
+local WHITE = "|cffFFFFFF"
+local GREEN = "|cff1eff00"
+local PURPLE = "|cff9F3FFF"
+local BLUE = "|cff0070dd"
+local ORANGE = "|cffFF8400"
 
 --Establish number of boss lines in the Atlas frame for scrolling
-local ATLAS_LOOT_BOSS_LINES	= 24;
-BOSS_SCROLL_LIST = {};
+local ATLAS_LOOT_BOSS_LINES = 24
+BOSS_SCROLL_LIST = {}
 
 --[[
 AtlasLoot_Atlas_OnShow:
@@ -26,16 +26,15 @@ function AtlasLoot_Atlas_OnShow()
     Atlas_Refresh();
     
     --We don't want Atlas and the Loot Browser open at the same time, so the Loot Browser is close
-    if AtlasLootDefaultFrame then
-        AtlasLootDefaultFrame:Hide();
-        AtlasLoot_SetupForAtlas();
+    if AtlasLootDefaultFrame:IsShown() then
+        AtlasLootDefaultFrame:Hide()
+        AtlasLoot_SetupForAtlas()
     end
     --Call the Atlas function
-    Hooked_Atlas_OnShow();
+    Hooked_Atlas_OnShow()
     --If we were looking at a loot table earlier in the session, it is still
     --saved on the item frame, so restore it in Atlas
     if AtlasLootItemsFrame.activeLootPage ~= nil then
-        AtlasLootItemsFrame:Show();
     else
         --If no loot table is selected, set up icons next to boss names
         for i=1,ATLAS_CUR_LINES do
@@ -44,14 +43,15 @@ function AtlasLoot_Atlas_OnShow()
                 getglobal("AtlasEntry"..i.."_Selected"):Hide();
             end
         end
+        AtlasLootItemsFrame:Show()
     end
     --Consult the saved variable table to see whether to show the bottom panel
     if AtlasLoot.db.profile.HidePanel == true then
-        AtlasLootPanel:Hide();
+        AtlasLootPanel:Hide()
     else
-        AtlasLootPanel:Show();
-    end 
     pFrame = AtlasFrame;
+        AtlasLootPanel:Show()
+    end
 end
 
 --[[
@@ -253,44 +253,42 @@ function AtlasLoot_Refresh()
 	end
 end
 
-
-
 function AtlasLoot_Atlas_Search(text)
-    local data = nil;
-    BOSS_SCROLL_LIST = {};
+    local data = nil
+    BOSS_SCROLL_LIST = {}
 
-    if (ATLAS_SEARCH_METHOD == nil) then
-        data = ATLAS_DATA;
+    if ATLAS_SEARCH_METHOD == nil then
+        data = ATLAS_DATA
     else
-        data = ATLAS_SEARCH_METHOD(ATLAS_DATA, text);
+        data = ATLAS_SEARCH_METHOD(ATLAS_DATA, text)
     end
 
     --populate the scroll frame entries list, the update func will do the rest
-    local i = 1;
-    while ( data[i] ~= nil ) do
-        ATLAS_SCROLL_LIST[i] = data[i][1];
+    local i = 1
+    while (data[i] ~= nil) do
+        ATLAS_SCROLL_LIST[i] = data[i][1]
 
-        local j = 1;
+        local j = 1
         if text ~= "" then
             -- Link the search results to their original indices
             while j <= #ATLAS_DATA and ATLAS_DATA[j][1] ~= data[i][1] do
-                j = j + 1;
+                j = j + 1
             end
-            BOSS_SCROLL_LIST[i] = j;
+            BOSS_SCROLL_LIST[i] = j
         else
-            BOSS_SCROLL_LIST[i] = i;
+            BOSS_SCROLL_LIST[i] = i
         end
 
-        i = i + 1;
+        i = i + 1
     end
 
-    ATLAS_CUR_LINES = i - 1;
+    ATLAS_CUR_LINES = i - 1
 end
 
 
 --[[
 AtlasLoot_AtlasScrollBar_Update:
-Hooks the Atlas scroll frame.  
+Hooks the Atlas scroll frame.
 Required as the Atlas function cannot deal with the AtlasLoot button template or the added Atlasloot entries
 ]]
 function AtlasLoot_AtlasScrollBar_Update()

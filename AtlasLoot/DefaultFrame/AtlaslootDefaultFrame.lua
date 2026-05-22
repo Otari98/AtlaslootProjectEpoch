@@ -10,19 +10,19 @@ AtlasLoot_SetNewStyle(style)
 ]]
 
 --Include all needed libraries
-local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
+local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
 local BabbleBoss = AtlasLoot_GetLocaleLibBabble("LibBabble-Boss-3.0")
 local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 local BabbleZone = AtlasLoot_GetLocaleLibBabble("LibBabble-Zone-3.0")
 local BabbleEpoch = AtlasLoot_GetLocaleLibBabble("LibBabble-Epoch-3.0")
 
 --Load the 2 dewdrop menus
-AtlasLoot_Dewdrop = AceLibrary("Dewdrop-2.0");
-AtlasLoot_DewdropSubMenu = AceLibrary("Dewdrop-2.0");
+AtlasLoot_Dewdrop = AceLibrary("Dewdrop-2.0")
+AtlasLoot_DewdropSubMenu = AceLibrary("Dewdrop-2.0")
 
 AtlasLoot_Data["AtlasLootFallback"] = {
-    EmptyInstance = {};
-};
+    EmptyInstance = {},
+}
 
 --[[
 AtlasLoot_DewDropClick(tablename, text, tabletype):
@@ -40,35 +40,35 @@ function AtlasLoot_DewDropClick(tablename, text, tabletype)
         --Show the loot table
         AtlasLoot_ShowItemsFrame(tablename, "", text, pFrame);
         --Save needed info for fuure re-display of the table
-        AtlasLoot.db.profile.LastBoss = tablename;
+        AtlasLoot.db.profile.LastBoss = tablename
         --Purge the text label for the submenu and disable the submenu
-        AtlasLootDefaultFrame_SubMenu:Disable();
-        AtlasLootDefaultFrame_SelectedTable:SetText("");
-        AtlasLootDefaultFrame_SelectedTable:Show();
-    --If the button links to a sub menu definition
+        AtlasLootDefaultFrame_SubMenu:Disable()
+        AtlasLootDefaultFrame_SelectedTable:SetText("")
+        AtlasLootDefaultFrame_SelectedTable:Show()
+        --If the button links to a sub menu definition
     else
         --Enable the submenu button
-        AtlasLootDefaultFrame_SubMenu:Enable();
+        AtlasLootDefaultFrame_SubMenu:Enable()
         --Show the first loot table associated with the submenu
         AtlasLoot_ShowBossLoot(AtlasLoot_DewDropDown_SubTables[tablename][1][2], AtlasLoot_DewDropDown_SubTables[tablename][1][1], pFrame);
         --Save needed info for fuure re-display of the table
-        AtlasLoot.db.profile.LastBoss = AtlasLoot_DewDropDown_SubTables[tablename][1][2];
+        AtlasLoot.db.profile.LastBoss = AtlasLoot_DewDropDown_SubTables[tablename][1][2]
         --Load the correct submenu and associated with the button
-        AtlasLoot_DewdropSubMenu:Unregister(AtlasLootDefaultFrame_SubMenu);
-        AtlasLoot_DewdropSubMenuRegister(AtlasLoot_DewDropDown_SubTables[tablename]);
+        AtlasLoot_DewdropSubMenu:Unregister(AtlasLootDefaultFrame_SubMenu)
+        AtlasLoot_DewdropSubMenuRegister(AtlasLoot_DewDropDown_SubTables[tablename])
         --Show a text label of what has been selected
         if AtlasLoot_DewDropDown_SubTables[tablename][1][1] ~= "" then
-            AtlasLootDefaultFrame_SelectedTable:SetText(AtlasLoot_DewDropDown_SubTables[tablename][1][1]);
+            AtlasLootDefaultFrame_SelectedTable:SetText(AtlasLoot_DewDropDown_SubTables[tablename][1][1])
         else
-            AtlasLootDefaultFrame_SelectedTable:SetText(AtlasLoot_TableNames[AtlasLoot_DewDropDown_SubTables[tablename][1][2]][1]);
+            AtlasLootDefaultFrame_SelectedTable:SetText(AtlasLoot_TableNames[AtlasLoot_DewDropDown_SubTables[tablename][1][2]][1])
         end
-        AtlasLootDefaultFrame_SelectedTable:Show();
+        AtlasLootDefaultFrame_SelectedTable:Show()
     end
     --Show the category that has been selected
-    AtlasLootDefaultFrame_SelectedCategory:SetText(text);
-    AtlasLootDefaultFrame_SelectedCategory:Show();
-    AtlasLoot_Dewdrop:Close(1);
-end 
+    AtlasLootDefaultFrame_SelectedCategory:SetText(text)
+    AtlasLootDefaultFrame_SelectedCategory:Show()
+    AtlasLoot_Dewdrop:Close(1)
+end
 
 --[[
 AtlasLoot_DewDropSubMenuClick(tablename, text):
@@ -82,15 +82,15 @@ function AtlasLoot_DewDropSubMenuClick(tablename, text)
     --Show the select loot table
     AtlasLoot_ShowItemsFrame(tablename, "", text, pFrame);
     --Save needed info for fuure re-display of the table
-    AtlasLoot.db.profile.LastBoss = tablename;
+    AtlasLoot.db.profile.LastBoss = tablename
     --Show the table that has been selected
     if text ~= "" then
-        AtlasLootDefaultFrame_SelectedTable:SetText(text);
+        AtlasLootDefaultFrame_SelectedTable:SetText(text)
     else
-        AtlasLootDefaultFrame_SelectedTable:SetText(AtlasLoot_TableNames[tablename][1]);
+        AtlasLootDefaultFrame_SelectedTable:SetText(AtlasLoot_TableNames[tablename][1])
     end
-    AtlasLootDefaultFrame_SelectedTable:Show();
-    AtlasLoot_DewdropSubMenu:Close(1);
+    AtlasLootDefaultFrame_SelectedTable:Show()
+    AtlasLoot_DewdropSubMenu:Close(1)
 end
 
 --[[
@@ -103,7 +103,7 @@ function AtlasLootDefaultFrame_OnShow()
     --Having the Atlas and loot browser frames shown at the same time would
     --cause conflicts, so I hide the Atlas frame when the loot browser appears
     if AtlasFrame then
-        AtlasFrame:Hide();
+        AtlasFrame:Hide()
     end
     --Remove the selection of a loot table in Atlas
     AtlasLootItemsFrame.activeLootPage = nil;
@@ -124,11 +124,11 @@ and close all Dewdrop menus
 ]]
 function AtlasLootDefaultFrame_OnHide()
     if AtlasFrame then
-        AtlasLoot_SetupForAtlas();
+        AtlasLoot_SetupForAtlas()
     end
-    AtlasLoot_Dewdrop:Close(1);
-    AtlasLoot_DewdropSubMenu:Close(1);
-end   
+    AtlasLoot_Dewdrop:Close(1)
+    AtlasLoot_DewdropSubMenu:Close(1)
+end
 
 --[[
 AtlasLoot_DewdropSubMenuRegister(loottable):
@@ -142,7 +142,7 @@ function AtlasLoot_DewdropSubMenuRegister(loottable)
         end,
         'children', function(level, value)
             if level == 1 then
-                for k,v in pairs(loottable) do
+                for k, v in pairs(loottable) do
                     if v[1] == "" then
                         AtlasLoot_DewdropSubMenu:AddLine(
                             'text', AtlasLoot_TableNames[v[2]][1],
@@ -162,17 +162,17 @@ function AtlasLoot_DewdropSubMenuRegister(loottable)
                     end
                 end
                 AtlasLoot_DewdropSubMenu:AddLine(
-					'text', AL["Close Menu"],
+                    'text', AL["Close Menu"],
                     'textR', 0,
                     'textG', 1,
                     'textB', 1,
-					'func', function() AtlasLoot_DewdropSubMenu:Close() end,
-					'notCheckable', true
-				)
+                    'func', function() AtlasLoot_DewdropSubMenu:Close() end,
+                    'notCheckable', true
+                )
             end
-		end,
-		'dontHook', true
-	)
+        end,
+        'dontHook', true
+    )
 end
 
 --[[
@@ -180,17 +180,17 @@ AtlasLoot_DewdropRegister:
 Constructs the main category menu from a tiered table
 ]]
 function AtlasLoot_DewdropRegister()
-	AtlasLoot_Dewdrop:Register(AtlasLootDefaultFrame_Menu,
+    AtlasLoot_Dewdrop:Register(AtlasLootDefaultFrame_Menu,
         'point', function(parent)
             return "TOP", "BOTTOM"
         end,
-		'children', function(level, value)
-			if level == 1 then
-				if AtlasLoot_DewDropDown then
-                    for k,v in ipairs(AtlasLoot_DewDropDown) do
+        'children', function(level, value)
+            if level == 1 then
+                if AtlasLoot_DewDropDown then
+                    for k, v in ipairs(AtlasLoot_DewDropDown) do
                         --If a link to show a submenu
-                        if (type(v[1]) == "table") and (type(v[1][1]) == "string") then
-                            local checked = false;
+                        if type(v[1]) == "table" and type(v[1][1]) == "string" then
+                            local checked = false
                             if v[1][3] == "Submenu" then
                                 AtlasLoot_Dewdrop:AddLine(
                                     'text', v[1][1],
@@ -217,10 +217,10 @@ function AtlasLoot_DewdropRegister()
                                 )
                             end
                         else
-                            local lock=0;
+                            local lock = 0
                             --If an entry linked to a subtable
-                            for i,j in pairs(v) do
-                                if lock==0 then
+                            for i, j in pairs(v) do
+                                if lock == 0 then
                                     AtlasLoot_Dewdrop:AddLine(
                                         'text', i,
                                         'textR', 1,
@@ -230,41 +230,41 @@ function AtlasLoot_DewdropRegister()
                                         'value', j,
                                         'notCheckable', true
                                     )
-                                    lock=1;
+                                    lock = 1
                                 end
                             end
                         end
                     end
                 end
                 --Close button
-				AtlasLoot_Dewdrop:AddLine(
-					'text', AL["Close Menu"],
+                AtlasLoot_Dewdrop:AddLine(
+                    'text', AL["Close Menu"],
                     'textR', 0,
                     'textG', 1,
                     'textB', 1,
-					'func', function() AtlasLoot_Dewdrop:Close() end,
-					'notCheckable', true
-				)
-			elseif level == 2 then
-				if value then
-                    for k,v in ipairs(value) do
+                    'func', function() AtlasLoot_Dewdrop:Close() end,
+                    'notCheckable', true
+                )
+            elseif level == 2 then
+                if value then
+                    for k, v in ipairs(value) do
                         if type(v) == "table" then
-                            if (type(v[1]) == "table") and (type(v[1][1]) == "string") then
-                                local checked = false;
+                            if type(v[1]) == "table" and type(v[1][1]) == "string" then
+                                local checked = false
                                 --If an entry to show a submenu
                                 if v[1][3] == "Submenu" then
-                                AtlasLoot_Dewdrop:AddLine(
-                                    'text', v[1][1],
-                                    'textR', 1,
-                                    'textG', 0.82,
-                                    'textB', 0,
-                                    'func', AtlasLoot_DewDropClick,
-                                    'arg1', v[1][2],
-                                    'arg2', v[1][1],
-                                    'arg3', v[1][3],
-                                    'notCheckable', true
-                                )
-                                --An entry to show a specific loot page
+                                    AtlasLoot_Dewdrop:AddLine(
+                                        'text', v[1][1],
+                                        'textR', 1,
+                                        'textG', 0.82,
+                                        'textB', 0,
+                                        'func', AtlasLoot_DewDropClick,
+                                        'arg1', v[1][2],
+                                        'arg2', v[1][1],
+                                        'arg3', v[1][3],
+                                        'notCheckable', true
+                                    )
+                                    --An entry to show a specific loot page
                                 elseif v[1][3] == "Table" and v[1][1] == "" then
                                     AtlasLoot_Dewdrop:AddLine(
                                         'text', AtlasLoot_TableNames[v[1][2]][1],
@@ -291,10 +291,10 @@ function AtlasLoot_DewdropRegister()
                                     )
                                 end
                             else
-                                local lock=0;
+                                local lock = 0
                                 --Entry to link to a sub table
-                                for i,j in pairs(v) do
-                                    if lock==0 then
+                                for i, j in pairs(v) do
+                                    if lock == 0 then
                                         AtlasLoot_Dewdrop:AddLine(
                                             'text', i,
                                             'textR', 1,
@@ -304,7 +304,7 @@ function AtlasLoot_DewdropRegister()
                                             'value', j,
                                             'notCheckable', true
                                         )
-                                        lock=1;
+                                        lock = 1
                                     end
                                 end
                             end
@@ -312,19 +312,19 @@ function AtlasLoot_DewdropRegister()
                     end
                 end
                 AtlasLoot_Dewdrop:AddLine(
-					'text', AL["Close Menu"],
+                    'text', AL["Close Menu"],
                     'textR', 0,
                     'textG', 1,
                     'textB', 1,
-					'func', function() AtlasLoot_Dewdrop:Close() end,
-					'notCheckable', true
-				)
+                    'func', function() AtlasLoot_Dewdrop:Close() end,
+                    'notCheckable', true
+                )
             elseif level == 3 then
                 --Essentially the same as level == 2
                 if value then
-                    for k,v in pairs(value) do
+                    for k, v in pairs(value) do
                         if type(v[1]) == "string" then
-                            local checked = false;
+                            local checked = false
                             if v[3] == "Submenu" then
                                 AtlasLoot_Dewdrop:AddLine(
                                     'text', v[1],
@@ -376,17 +376,17 @@ function AtlasLoot_DewdropRegister()
                     end
                 end
                 AtlasLoot_Dewdrop:AddLine(
-					'text', AL["Close Menu"],
+                    'text', AL["Close Menu"],
                     'textR', 0,
                     'textG', 1,
                     'textB', 1,
-					'func', function() AtlasLoot_Dewdrop:Close() end,
-					'notCheckable', true
-				)
-			end
-		end,
-		'dontHook', true
-	)
+                    'func', function() AtlasLoot_Dewdrop:Close() end,
+                    'notCheckable', true
+                )
+            end
+        end,
+        'dontHook', true
+    )
 end
 
 --[[

@@ -10,14 +10,14 @@ This function sets up the Atlas specific XML objects
 ]]
 function AtlasLoot_SetupForAtlas()
     --Position the frame with the AtlasLoot version details in the Atlas frame
-    AtlasLootInfo:ClearAllPoints();
-    AtlasLootInfo:SetParent(AtlasFrame);
-    AtlasLootInfo:SetPoint("TOPLEFT", "AtlasFrame", "TOPLEFT", 546, -3);
-    
+    AtlasLootInfo:ClearAllPoints()
+    AtlasLootInfo:SetParent(AtlasFrame)
+    AtlasLootInfo:SetPoint("TOPLEFT", "AtlasFrame", "TOPLEFT", 546, -3)
+
     --Anchor the bottom panel to the Atlas frame
-    AtlasLootPanel:ClearAllPoints();
-    AtlasLootPanel:SetParent(AtlasFrame);
-    AtlasLootPanel:SetPoint("TOP", "AtlasFrame", "BOTTOM", 0, 9);
+    AtlasLootPanel:ClearAllPoints()
+    AtlasLootPanel:SetParent(AtlasFrame)
+    AtlasLootPanel:SetPoint("TOP", "AtlasFrame", "BOTTOM", 0, 9)
 
     --Anchor the loot table to the Atlas frame
     AtlasLoot_SetItemInfoFrame();
@@ -78,12 +78,12 @@ function AtlasLootBoss_OnClick(name)
             AtlasLoot_AtlasScrollBar_Update();
         end
     end
-    
+
     --This has been invoked from Atlas, so we remove any claim external mods have on the loot table
-    AtlasLootItemsFrame.externalBoss = nil;
-    
+    AtlasLootItemsFrame.externalBoss = nil
+
     --Hide the AtlasQuest frame if present so that the AtlasLoot items frame is not stuck under it
-    if (AtlasQuestInsideFrame) then
-        HideUIPanel(AtlasQuestInsideFrame);
+    if AtlasQuestInsideFrame then
+        HideUIPanel(AtlasQuestInsideFrame)
     end
 end

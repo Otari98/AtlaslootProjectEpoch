@@ -1,17 +1,15 @@
-<Ui xmlns="http://www.blizzard.com/wow/ui/"   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"   xsi:schemaLocation="http://www.blizzard.com/wow/ui/">
+<Ui xmlns="http://www.blizzard.com/wow/ui/">
 
 	<Script file="Filter.lua"/>
-    <Script file="ExtraText.lua"/>
-    <Script file="TextParsing.lua"/>
-    <Script file="Options.lua"/>
-    <Script file="LootButtons.lua"/>
-    <Script file="HooksandAPI.lua"/>
-    <Script file="AtlasIntegration.lua"/>
-    <Script file="Launchers.lua"/>
+	<Script file="ExtraText.lua"/>
+	<Script file="TextParsing.lua"/>
+	<Script file="Options.lua"/>
+	<Script file="LootButtons.lua"/>
+	<Script file="HooksandAPI.lua"/>
+	<Script file="AtlasIntegration.lua"/>
+	<Script file="Launchers.lua"/>
 	<Script file="AtlasLoot.lua"/>
 	<Script file="WishList.lua"/>
-    <Script file="Search.lua"/>
-    
 	
     <GameTooltip name="AtlasLootTooltip" inherits="GameTooltipTemplate" parent="UIParent" hidden="true"/>
     
@@ -34,6 +32,8 @@
                     <Size>
 						<AbsDimension x="16" y="16"/>
 					</Size>
+	<Script file="Search.lua"/>
+
 					<Anchors>
 						<Anchor point="RIGHT" relativeTo="$parent" relativePoint="RIGHT"/>
 					</Anchors>
@@ -170,47 +170,27 @@
 		</Size>
     </Button>
 
-    <Button name="AtlasLootItem_ParentTemplate" virtual="true" hidden="false">
-        <Size>
-			<AbsDimension x="236" y="28"/>
-		</Size>
+	<Button name="AtlasLootItem_ParentTemplate" virtual="true">
+		<Size x="236" y="28"/>
 		<HighlightTexture file="Interface\QuestFrame\UI-QuestTitleHighlight" alphaMode="ADD"/>
 		<Layers>
 			<Layer level="ARTWORK">
-				<Texture name="$parent_Icon">
-					<Size>
-						<AbsDimension x="25" y="25"/>
-					</Size>
+				<Texture name="$parent_Icon" parentKey="Icon">
+					<Size x="27" y="27"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
-                            <Offset>
-                                <AbsDimension x="1" y="-1"/>
-                            </Offset>
-                        </Anchor>
+						<Anchor point="CENTER" relativePoint="TOPLEFT" x="14" y="-14"/>
 					</Anchors>
 				</Texture>
 				<FontString name="$parent_Name" inherits="GameFontNormal" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="205" y="12"/>
-					</Size>
+					<Size x="205" y="12"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent_Icon" relativePoint="TOPRIGHT">
-							<Offset>
-								<AbsDimension x="3" y="0"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="TOPLEFT" x="30" y="-1"/>
 					</Anchors>
 				</FontString>
-				<FontString name="$parent_Extra" inherits="GameFontNormalSmall" justifyH="LEFT" hidden="true">
-					<Size>
-						<AbsDimension x="205" y="10"/>
-					</Size>
+				<FontString name="$parent_Extra" inherits="GameFontNormalSmall" justifyH="LEFT">
+					<Size x="205" y="10"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent_Name" relativePoint="BOTTOMLEFT">
-                            <Offset>
-								<AbsDimension x="0" y="-1"/>
-							</Offset>
-                        </Anchor>
+						<Anchor point="TOPLEFT" relativeTo="$parent_Name" relativePoint="BOTTOMLEFT" x="0" y="-1"/>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -262,74 +242,50 @@
 		</Scripts>
 	</Button>
 
-	<Frame name="AtlasLootInfo" hidden="false">
-		<Size>
-			<AbsDimension x="128" y="75"/>
-		</Size>
-        <Frames>
-            <Button name="$parentHidePanel" inherits="OptionsButtonTemplate">
-                <Size>
-                    <AbsDimension x="140" y="20"/>
-                </Size>
-                <Anchors>
-                    <Anchor point="BOTTOMLEFT" relativeTo="$parent" relativePoint="BOTTOMLEFT">
-                        <Offset>
-                            <AbsDimension x="-5" y="-3"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-                        this:SetText(AL["Toggle AL Panel"]);
-                        this:SetWidth(this:GetTextWidth()+20);
-                        getglobal("AtlasLootInfo_Text2"):SetText(AL["Click boss name to view loot."]);
-                    </OnShow>
-                    <OnClick>
-                        if AtlasLoot.db.profile.HidePanel then
-                            AtlasLoot.db.profile.HidePanel = false;
-                            if (AtlasFrame) then
-                                if AtlasFrame:IsVisible() then
-                                    AtlasLootPanel:Show();
-                                end
-                            end
-                        else
-                            AtlasLoot.db.profile.HidePanel = true;
-                            if (AtlasFrame) then
-                                if AtlasFrame:IsVisible() then
-                                    AtlasLootPanel:Hide();
-                                end
-                            end
-                        end
-                        AtlasLootOptionsFrameHidePanel:SetChecked(AtlasLoot.db.profile.HidePanel);
-                        AtlasLoot_SetupForAtlas();
-                    </OnClick>
-                </Scripts>
-            </Button>
-        </Frames>
+	<Frame name="AtlasLootInfo">
+		<Size x="128" y="75"/>
+		<Frames>
+			<Button name="$parentHidePanel" inherits="OptionsButtonTemplate">
+				<Size x="140" y="20"/>
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" x="-5" y="-3"/>
+				</Anchors>
+				<Scripts>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+						self:SetText(AL["Toggle AL Panel"])
+						self:SetWidth(self:GetTextWidth() + 20)
+						AtlasLootInfo_Text2:SetText(AL["Click boss name to view loot."])
+					</OnShow>
+					<OnClick>
+						if AtlasLoot.db.profile.HidePanel then
+							AtlasLoot.db.profile.HidePanel = false
+							if AtlasFrame and AtlasFrame:IsVisible() then
+								AtlasLootPanel:Show()
+							end
+						else
+							AtlasLoot.db.profile.HidePanel = true
+							if AtlasFrame and AtlasFrame:IsVisible() then
+								AtlasLootPanel:Hide()
+							end
+						end
+						AtlasLootOptionsFrameHidePanel:SetChecked(AtlasLoot.db.profile.HidePanel)
+						AtlasLoot_SetupForAtlas()
+					</OnClick>
+				</Scripts>
+			</Button>
+		</Frames>
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString name="$parent_Text1" inherits="GameFontNormalSmall" text="ATLASLOOT_VERSION" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="180" y="10"/>
-					</Size>
-					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
-                        <Offset>
-                            <AbsDimension x="0" y="25"/>
-                        </Offset>
-                    </Anchor>
+					<Size x="180" y="10"/>
+					<Anchor point="TOPLEFT" x="0" y="25"/>
 				</FontString>
 				<FontString name="$parent_Text2" inherits="GameFontNormalSmall" justifyH="LEFT">
-					<Size>
-						<AbsDimension x="180" y="10"/>
-					</Size>
+					<Size x="180" y="10"/>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent_Text1" relativePoint="BOTTOMLEFT">
- 							<Offset>
- 								<AbsDimension x="0" y="-2"/>
- 							</Offset>
-			 			</Anchor>
+						<Anchor point="TOPLEFT" relativeTo="$parent_Text1" relativePoint="BOTTOMLEFT" x="0" y="-2"/>
 					</Anchors>
 				</FontString>
 			</Layer>
@@ -337,12 +293,10 @@
 	</Frame>
 
 	<Frame name="AtlasLootItemsFrame" parent="UIParent" hidden="true">
-		<Size>
-			<AbsDimension x="510" y="510"/>
-		</Size>
+		<Size x="510" y="510"/>
 		<Anchors>
- 			<Anchor point="CENTER"/>
- 		</Anchors>
+			<Anchor point="CENTER"/>
+		</Anchors>
 		<Frames>
             <Button name="$parent_CloseButton" inherits="UIPanelCloseButton">
 				<Anchors>
@@ -363,246 +317,332 @@
 			</Button>
 			<Button name="AtlasLootItem_1" inherits="AtlasLootItem_Template" id="1">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="25" y="-35"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="25" y="-35"/>
 				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_2" inherits="AtlasLootItem_Template" id="2">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_1" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_1" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_3" inherits="AtlasLootItem_Template" id="3">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_2" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_2" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_4" inherits="AtlasLootItem_Template" id="4">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_3" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_3" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_5" inherits="AtlasLootItem_Template" id="5">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_4" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_4" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_6" inherits="AtlasLootItem_Template" id="6">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_5" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_5" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_7" inherits="AtlasLootItem_Template" id="7">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_6" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_6" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_8" inherits="AtlasLootItem_Template" id="8">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_7" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_7" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_9" inherits="AtlasLootItem_Template" id="9">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_8" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_8" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_10" inherits="AtlasLootItem_Template" id="10">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_9" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_9" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_11" inherits="AtlasLootItem_Template" id="11">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_10" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_10" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_12" inherits="AtlasLootItem_Template" id="12">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_11" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_11" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_13" inherits="AtlasLootItem_Template" id="13">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_12" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_12" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_14" inherits="AtlasLootItem_Template" id="14">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_13" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_13" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_15" inherits="AtlasLootItem_Template" id="15">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_14" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_14" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_16" inherits="AtlasLootItem_Template" id="16">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_1" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_1" relativePoint="TOPRIGHT" x="0" y="0"/>
 				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_17" inherits="AtlasLootItem_Template" id="17">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_16" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_16" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_18" inherits="AtlasLootItem_Template" id="18">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_17" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_17" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_19" inherits="AtlasLootItem_Template" id="19">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_18" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_18" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_20" inherits="AtlasLootItem_Template" id="20">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_19" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_19" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_21" inherits="AtlasLootItem_Template" id="21">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_20" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_20" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_22" inherits="AtlasLootItem_Template" id="22">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_21" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_21" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_23" inherits="AtlasLootItem_Template" id="23">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_22" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_22" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_24" inherits="AtlasLootItem_Template" id="24">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_23" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_23" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_25" inherits="AtlasLootItem_Template" id="25">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_24" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_24" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_26" inherits="AtlasLootItem_Template" id="26">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_25" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_25" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_27" inherits="AtlasLootItem_Template" id="27">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_26" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_26" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_28" inherits="AtlasLootItem_Template" id="28">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_27" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_27" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_29" inherits="AtlasLootItem_Template" id="29">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_28" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_28" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootItem_30" inherits="AtlasLootItem_Template" id="30">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_29" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_29" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
             <Button name="AtlasLootMenuItem_1" inherits="AtlasLootMenuItem_Template" id="1">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT">
-						<Offset>
-							<AbsDimension x="25" y="-35"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="25" y="-35"/>
 				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_2" inherits="AtlasLootMenuItem_Template" id="2">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_1" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_1" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_3" inherits="AtlasLootMenuItem_Template" id="3">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_2" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_2" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_4" inherits="AtlasLootMenuItem_Template" id="4">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_3" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_3" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_5" inherits="AtlasLootMenuItem_Template" id="5">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_4" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_4" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_6" inherits="AtlasLootMenuItem_Template" id="6">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_5" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_5" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_7" inherits="AtlasLootMenuItem_Template" id="7">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_6" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_6" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_8" inherits="AtlasLootMenuItem_Template" id="8">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_7" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_7" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_9" inherits="AtlasLootMenuItem_Template" id="9">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_8" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_8" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_10" inherits="AtlasLootMenuItem_Template" id="10">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_9" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_9" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_11" inherits="AtlasLootMenuItem_Template" id="11">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_10" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_10" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_12" inherits="AtlasLootMenuItem_Template" id="12">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_11" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_11" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_13" inherits="AtlasLootMenuItem_Template" id="13">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_12" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_12" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_14" inherits="AtlasLootMenuItem_Template" id="14">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_13" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_13" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_15" inherits="AtlasLootMenuItem_Template" id="15">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_14" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_14" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_16" inherits="AtlasLootMenuItem_Template" id="16">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_1" relativePoint="TOPRIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_1" relativePoint="TOPRIGHT" x="0" y="0"/>
 				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_17" inherits="AtlasLootMenuItem_Template" id="17">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_16" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_16" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_18" inherits="AtlasLootMenuItem_Template" id="18">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_17" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_17" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_19" inherits="AtlasLootMenuItem_Template" id="19">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_18" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_18" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_20" inherits="AtlasLootMenuItem_Template" id="20">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_19" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_19" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_21" inherits="AtlasLootMenuItem_Template" id="21">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_20" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_20" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_22" inherits="AtlasLootMenuItem_Template" id="22">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_21" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_21" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_23" inherits="AtlasLootMenuItem_Template" id="23">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_22" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_22" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_24" inherits="AtlasLootMenuItem_Template" id="24">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_23" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_23" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_25" inherits="AtlasLootMenuItem_Template" id="25">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_24" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_24" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_26" inherits="AtlasLootMenuItem_Template" id="26">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_25" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_25" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_27" inherits="AtlasLootMenuItem_Template" id="27">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_26" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_26" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_28" inherits="AtlasLootMenuItem_Template" id="28">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_27" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_27" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_29" inherits="AtlasLootMenuItem_Template" id="29">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_28" relativePoint="BOTTOMLEFT"/></Anchors>
+				<Anchors>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_28" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
 			</Button>
 			<Button name="AtlasLootMenuItem_30" inherits="AtlasLootMenuItem_Template" id="30">
-				<Anchors><Anchor point="TOPLEFT" relativeTo="AtlasLootItem_29" relativePoint="BOTTOMLEFT"/></Anchors>
-			</Button>
-            <Button name="AtlasLoot10Man25ManSwitch" inherits="OptionsButtonTemplate">
-				<Size>
-					<AbsDimension x="160" y="23"/>
-				</Size>
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM">
-						<Offset>
-							<AbsDimension x="-120" y="4"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" relativeTo="AtlasLootItem_29" relativePoint="BOTTOMLEFT"/>
+				</Anchors>
+			</Button>
+			<Button name="AtlasLoot10Man25ManSwitch" inherits="UIPanelButtonTemplate2">
+				<Size x="160" y="21"/>
+				<Anchors>
+					<Anchor point="BOTTOM" x="-125" y="4"/>
 				</Anchors>
 				<Scripts>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-			        </OnShow>
+					<OnShow>
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 					<OnClick>
-						AtlasLoot_10Man25ManToggle();
+						AtlasLoot_10Man25ManToggle()
 					</OnClick>
 				</Scripts>
 			</Button>
-            <CheckButton name="$parent_Heroic" inherits="OptionsCheckButtonTemplate" hidden="true">
+			<CheckButton name="$parent_Heroic" inherits="OptionsCheckButtonTemplate" hidden="true">
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM">
-						<Offset>
-							<AbsDimension x="-185" y="24"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOM" x="-185" y="27"/>
 				</Anchors>
 				<Scripts>
-                    <OnShow>
-		                this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-	                </OnShow>
+					<OnShow>
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Heroic Mode"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Heroic Mode"])
 					</OnLoad>
 					<OnClick>
-						AtlasLoot_HeroicModeToggle();
+						AtlasLoot_HeroicModeToggle()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
@@ -637,11 +677,7 @@
 					<AbsDimension x="160" y="23"/>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM">
-						<Offset>
-							<AbsDimension x="120" y="4"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOM" x="0" y="4"/>
 				</Anchors>
 				<Scripts>
                     <OnShow>
@@ -674,11 +710,7 @@
 					<AbsDimension x="25" y="25" />
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM">
-						<Offset>
-							<AbsDimension x="58" y="28"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOMRIGHT" x="-12" y="5"/>
 				</Anchors>
 				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
 				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
@@ -707,24 +739,24 @@
 					</Anchor>
 				</Anchors>
 				<Scripts>
-                    <OnShow>
-		                this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-	                </OnShow>
+					<OnShow>
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Filter"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Filter"])
 					</OnLoad>
-                    <OnEnter>
+					<OnEnter>
 						local BabbleEpoch = AtlasLoot_GetLocaleLibBabble("LibBabble-Epoch-3.0")
-                        GameTooltip:ClearLines();
-                        GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 2), 5);
-                        GameTooltip:AddLine("|cffff0000"..BabbleEpoch["Filter Items"]);
-                        GameTooltip:AddLine(BabbleEpoch["Hides any items on this page\nwhich are excluded by your\nfilter options."]);
-                        GameTooltip:AddLine("|cff4488FF"..BabbleEpoch["Right click"]..": ".."|cffFFD100"..BabbleEpoch["Open filter options."]);
-                        GameTooltip:Show();
-			        </OnEnter>
-                    <OnLeave>
-                        GameTooltip:Hide();
+						GameTooltip:ClearLines()
+						GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+						GameTooltip:AddLine("|cffff0000"..BabbleEpoch["Filter Items"])
+						GameTooltip:AddLine(BabbleEpoch["Hides any items on this page\nwhich are excluded by your\nfilter options."])
+						GameTooltip:AddLine("|cff4488FF"..BabbleEpoch["Right click"]..": ".."|cffFFD100"..BabbleEpoch["Open filter options."])
+						GameTooltip:Show()
+					</OnEnter>
+					<OnLeave>
+						GameTooltip:Hide()
 					</OnLeave>
 				</Scripts>
 			</CheckButton>
@@ -750,39 +782,31 @@
 			<Layer level="BACKGROUND">
 				<Texture name="$parent_Back">
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"/>
-						<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT"/>
+						<Anchor point="TOPLEFT"/>
+						<Anchor point="BOTTOMRIGHT"/>
 					</Anchors>
 					<Color r="0" g="0" b="0" a="0.7"/>
 				</Texture>
 			</Layer>
 			<Layer level="OVERLAY">
-				<FontString name="AtlasLoot_BossName" inherits="GameFontHighlightLarge" justifyH="CENTER" frameStrata="DIALOG">
-					<Size>
-						<AbsDimension x="512" y="30"/>
-					</Size>
+				<FontString name="AtlasLoot_BossName" inherits="GameFontHighlightLarge" justifyH="CENTER">
+					<Size x="512" y="30"/>
 					<Anchors>
-						<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP"/>
+						<Anchor point="TOP"/>
 					</Anchors>
 				</FontString>
-                <FontString name="AtlasLoot_QuickLooks" inherits="GameFontNormal" justifyH="RIGHT">
-					<Size>
-						<AbsDimension x="200" y="25"/>
-					</Size>
+				<FontString name="AtlasLoot_QuickLooks" inherits="GameFontNormal" justifyH="RIGHT">
+					<Size x="200" y="25"/>
 					<Anchors>
-						<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM">
-                            <Offset>
-                                <AbsDimension x="-57" y="28"/>
-                            </Offset>
-                        </Anchor>
+						<Anchor point="BOTTOM" x="-57" y="28"/>
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
 		<Scripts>
-            <OnShow>
-                this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-            </OnShow>
+			<OnShow>
+				self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+			</OnShow>
 			<OnLoad>
 				AtlasLoot_OnLoad();
                 local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
@@ -794,689 +818,519 @@
 			</OnEvent>
 		</Scripts>
 	</Frame>
-    
-    <Frame name="AtlasLootHelpFrame" hidden="true">
-        <Size>
-			<AbsDimension x="425" y="450"/>
-		</Size>
+
+	<Frame name="AtlasLootHelpFrame" hidden="true">
+		<Size x="425" y="450"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
-        <Layers>
-            <Layer level="OVERLAY">
+		<Layers>
+			<Layer level="OVERLAY">
 				<FontString name="$parent_Title" inherits="GameFontHighlightLarge" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="400" y="30"/>
-					</Size>
+					<Size x="400" y="30"/>
 					<Anchors>
-						<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP"/>
+						<Anchor point="TOP"/>
 					</Anchors>
 				</FontString>
-            </Layer>
-        </Layers>
-        <Scripts>
-            <OnLoad>
-				local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-				getglobal("AtlasLootHelpFrame_Title"):SetText(AL["AtlasLoot Help"]);
+			</Layer>
+		</Layers>
+		<Scripts>
+			<OnLoad>
+				local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+				AtlasLootHelpFrame_Title:SetText(AL["AtlasLoot Help"])
 			</OnLoad>
-            <OnShow>
-                AtlasLoot_DisplayHelp();
-            </OnShow>
-        </Scripts>
-    </Frame>
-    
-    <Frame name="AtlasLootOptionsFrame" hidden="true">
-		<Size>
-			<AbsDimension x="425" y="405"/>
-		</Size>
+			<OnShow>
+				AtlasLoot_DisplayHelp()
+			</OnShow>
+		</Scripts>
+	</Frame>
+
+	<Frame name="AtlasLootOptionsFrame" hidden="true">
+		<Size x="425" y="405"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
 		</Anchors>
 		<Frames>
-            <CheckButton name="$parentDefaultTT" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parentDefaultTT" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="5" y="-40"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="5" y="-40"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Default Tooltips"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Default Tooltips"])
 					</OnLoad>
 					<OnClick>
-						AtlasLootOptions_DefaultTTToggle();
+						AtlasLootOptions_DefaultTTToggle()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentLootlinkTT" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="5" y="-70"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="5" y="-70"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Lootlink Tooltips"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Lootlink Tooltips"])
 					</OnLoad>
 					<OnClick>
-						AtlasLootOptions_LootlinkTTToggle();
+						AtlasLootOptions_LootlinkTTToggle()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-            <CheckButton name="$parentItemSyncTT" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parentItemSyncTT" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="5" y="-100"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="5" y="-100"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["ItemSync Tooltips"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["ItemSync Tooltips"])
 					</OnLoad>
 					<OnClick>
-						AtlasLootOptions_ItemSyncTTToggle();
+						AtlasLootOptions_ItemSyncTTToggle()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-            <CheckButton name="$parentOpaque" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parentOpaque" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="5" y="-130"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="5" y="-130"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Make Loot Table Opaque"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Make Loot Table Opaque"])
 					</OnLoad>
 					<OnClick>
-						AtlasLootOptions_OpaqueToggle();
+						AtlasLootOptions_OpaqueToggle()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-            <CheckButton name="$parentItemID" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parentItemID" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="5" y="-160"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOPLEFT" x="5" y="-160"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Show itemIDs at all times"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Show itemIDs at all times"])
 					</OnLoad>
 					<OnClick>
-						AtlasLootOptions_ItemIDToggle();
+						AtlasLootOptions_ItemIDToggle()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-            <CheckButton name="$parentLoDStartup" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parentLoDStartup" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="5" y="-40"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" x="5" y="-40"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Load Loot Modules at Startup"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Load Loot Modules at Startup"])
 					</OnLoad>
 					<OnClick>
-						AtlasLootOptions_LoDStartup();
+						AtlasLootOptions_LoDStartup()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentSafeLinks" inherits="OptionsCheckButtonTemplate" enable="false">
 				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="5" y="-70"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" x="5" y="-70"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Safe Chat Links"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Safe Chat Links"])
 					</OnLoad>
 					<OnClick>
-						AtlasLootOptions_SafeLinksToggle();
+						AtlasLootOptions_SafeLinksToggle()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
             <CheckButton name="$parentEquipCompare" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="5" y="-100"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" x="5" y="-100"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Show Comparison Tooltips"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Show Comparison Tooltips"])
 					</OnLoad>
 					<OnClick>
-						if(AtlasLoot.db.profile.EquipCompare) then
-                            AtlasLoot.db.profile.EquipCompare = false;
-                            if (EquipCompare_UnregisterTooltip) then
-                                EquipCompare_UnregisterTooltip(AtlasLootTooltip);
-                            end
-                        else
-                            AtlasLoot.db.profile.EquipCompare = true;
-                            if (EquipCompare_RegisterTooltip) then
-                                EquipCompare_RegisterTooltip(AtlasLootTooltip);
-                            end
-                        end
+						if AtlasLoot.db.profile.EquipCompare then
+							AtlasLoot.db.profile.EquipCompare = false
+							if EquipCompare_UnregisterTooltip then
+								EquipCompare_UnregisterTooltip(AtlasLootTooltip)
+							end
+						else
+							AtlasLoot.db.profile.EquipCompare = true
+							if EquipCompare_RegisterTooltip then
+								EquipCompare_RegisterTooltip(AtlasLootTooltip)
+							end
+						end
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-            <CheckButton name="$parentItemSpam" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parentItemSpam" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="5" y="-130"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" x="5" y="-130"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Suppress Item Query Text"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Suppress Item Query Text"])
 					</OnLoad>
 					<OnClick>
-						AtlasLootOptions_ItemSpam();
+						AtlasLootOptions_ItemSpam()
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-            <CheckButton name="$parentHidePanel" inherits="OptionsCheckButtonTemplate">
+			<CheckButton name="$parentHidePanel" inherits="OptionsCheckButtonTemplate">
 				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="5" y="-160"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" x="5" y="-160"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						getglobal(this:GetName().."Text"):SetText(AL["Hide AtlasLoot Panel"]);
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						_G[self:GetName().."Text"]:SetText(AL["Hide AtlasLoot Panel"])
 					</OnLoad>
 					<OnClick>
 						if AtlasLoot.db.profile.HidePanel then
-                            AtlasLoot.db.profile.HidePanel = false;
-                            if (AtlasFrame) then
-                                if AtlasFrame:IsVisible() then
-                                    AtlasLootPanel:Show();
-                                end
-                            end
-                        else
-                            AtlasLoot.db.profile.HidePanel = true;
-                            if (AtlasFrame) then
-                                if AtlasFrame:IsVisible() then
-                                    AtlasLootPanel:Hide();
-                                end
-                            end
-                        end
+							AtlasLoot.db.profile.HidePanel = false
+							if AtlasFrame then
+								if AtlasFrame:IsVisible() then
+									AtlasLootPanel:Show()
+								end
+							end
+						else
+							AtlasLoot.db.profile.HidePanel = true
+							if AtlasFrame then
+								if AtlasFrame:IsVisible() then
+									AtlasLootPanel:Hide()
+								end
+							end
+						end
 					</OnClick>
 				</Scripts>
 			</CheckButton>
-            <Button name="AtlasLoot_SelectLootBrowserStyle" inherits="UIDropDownMenuTemplate">
+			<Button name="AtlasLoot_SelectLootBrowserStyle" inherits="UIDropDownMenuTemplate">
 				<Layers>
 					<Layer level="BACKGROUND">
 						<FontString name="$parent_Label" inherits="GameFontNormalSmall">
 							<Anchors>
-								<Anchor point="RIGHT" relativePoint="LEFT">
-									<Offset>
-										<AbsDimension x="15" y="2"/>
-									</Offset>
-								</Anchor>
+								<Anchor point="RIGHT" relativePoint="LEFT" x="15" y="2"/>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="30" y="-200"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" x="30" y="-200"/>
 				</Anchors>
 			</Button>
-            <Button name="AtlasLoot_CraftingLink" inherits="UIDropDownMenuTemplate">
+			<Button name="AtlasLoot_CraftingLink" inherits="UIDropDownMenuTemplate">
 				<Layers>
 					<Layer level="BACKGROUND">
 						<FontString name="$parent_Label" inherits="GameFontNormalSmall">
 							<Anchors>
-								<Anchor point="RIGHT" relativePoint="LEFT">
-									<Offset>
-										<AbsDimension x="15" y="2"/>
-									</Offset>
-								</Anchor>
+								<Anchor point="RIGHT" relativePoint="LEFT" x="15" y="2"/>
 							</Anchors>
 						</FontString>
 					</Layer>
 				</Layers>
 				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="30" y="-230"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" x="30" y="-230"/>
 				</Anchors>
 			</Button>
-            <Slider name="$ParentLootBrowserScale" inherits="OptionsSliderTemplate">
-				<Size>
-					<AbsDimension x="240" y="16"/>
-				</Size>
+			<Slider name="$ParentLootBrowserScale" inherits="OptionsSliderTemplate">
+				<Size x="240" y="16"/>
 				<Anchors>
-					<Anchor point="TOP">
-						<Offset>
-							<AbsDimension x="0" y="-285" />
-						</Offset>
-					</Anchor>
+					<Anchor point="TOP" x="0" y="-285" />
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						AtlasLoot_SetupLootBrowserSlider(self, 0.25, 1.5, 0.01);
+						AtlasLoot_SetupLootBrowserSlider(self, 0.25, 1.5, 0.01)
 					</OnLoad>
 					<OnValueChanged>
-						AtlasLoot_UpdateLootBrowserSlider(self);
-						AtlasLoot.db.profile.LootBrowserScale = this:GetValue();
-						AtlasLoot_UpdateLootBrowserScale();
+						AtlasLoot_UpdateLootBrowserSlider(self)
+						AtlasLoot.db.profile.LootBrowserScale = self:GetValue()
+						AtlasLoot_UpdateLootBrowserScale()
 					</OnValueChanged>
 				</Scripts>
 			</Slider>
-            <Button name="$parent_ResetWishlist" inherits="AtlasLootPanelButtonTemplate">
-                <Size>
-			        <AbsDimension x="130" y="25"/>
-		        </Size>
-                <Anchors>
-                    <Anchor point="TOP">
-                        <Offset>
-                            <AbsDimension x="0" y="-325"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			<Button name="$parent_ResetWishlist" inherits="AtlasLootPanelButtonTemplate">
+				<Size x="130" y="25"/>
+				<Anchors>
+					<Anchor point="TOP" x="0" y="-325"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        AtlasLoot_Reset("wishlist");
+						AtlasLoot_Reset("wishlist")
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Reset Wishlist"]);
-                        this:SetWidth(AtlasLootOptionsFrame_ResetWishlist:GetTextWidth()+20);
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Reset Wishlist"])
+						self:SetWidth(AtlasLootOptionsFrame_ResetWishlist:GetTextWidth() + 20)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_ResetAtlasLoot" inherits="AtlasLootPanelButtonTemplate">
-                <Size>
-			        <AbsDimension x="130" y="25"/>
-		        </Size>
-                <Anchors>
-                    <Anchor point="RIGHT" relativeTo="AtlasLootOptionsFrame_ResetWishlist" relativePoint="LEFT">
-                        <Offset>
-                            <AbsDimension x="-10" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_ResetAtlasLoot" inherits="AtlasLootPanelButtonTemplate">
+				<Size x="130" y="25"/>
+				<Anchors>
+					<Anchor point="RIGHT" relativeTo="AtlasLootOptionsFrame_ResetWishlist" relativePoint="LEFT" x="-10" y="0"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        AtlasLoot_Reset("frames");
+						AtlasLoot_Reset("frames")
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Reset Frames"]);
-                        this:SetWidth(AtlasLootOptionsFrame_ResetAtlasLoot:GetTextWidth()+20);
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Reset Frames"])
+						self:SetWidth(AtlasLootOptionsFrame_ResetAtlasLoot:GetTextWidth() + 20)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_ResetQuicklooks" inherits="AtlasLootPanelButtonTemplate">
-                <Size>
-			        <AbsDimension x="130" y="25"/>
-		        </Size>
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="AtlasLootOptionsFrame_ResetWishlist" relativePoint="RIGHT">
-                        <Offset>
-                            <AbsDimension x="10" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_ResetQuicklooks" inherits="AtlasLootPanelButtonTemplate">
+				<Size x="130" y="25"/>
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="AtlasLootOptionsFrame_ResetWishlist" relativePoint="RIGHT" x="10" y="0"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        AtlasLoot_Reset("quicklooks");
+						AtlasLoot_Reset("quicklooks")
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Reset Quicklooks"]);
-                        this:SetWidth(AtlasLootOptionsFrame_ResetQuicklooks:GetTextWidth()+20);
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Reset Quicklooks"])
+						self:SetWidth(AtlasLootOptionsFrame_ResetQuicklooks:GetTextWidth() + 20)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_FuBarShow" inherits="AtlasLootPanelButtonTemplate">
-                <Size>
-			        <AbsDimension x="150" y="25"/>
-		        </Size>
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parent" relativePoint="TOP">
-                        <Offset>
-                            <AbsDimension x="-85" y="-390"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_FuBarShow" inherits="AtlasLootPanelButtonTemplate">
+				<Size x="150" y="25"/>
+				<Anchors>
+					<Anchor point="TOP" x="-85" y="-390"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        if AtlasLootFu then
-                            AtlasLootFu:Show();
-                        end
+						if AtlasLootFu then
+							AtlasLootFu:Show()
+						end
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Show FuBar Plugin"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Show FuBar Plugin"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_FuBarHide" inherits="AtlasLootPanelButtonTemplate">
-                <Size>
-			        <AbsDimension x="150" y="25"/>
-		        </Size>
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parent" relativePoint="TOP">
-                        <Offset>
-                            <AbsDimension x="85" y="-390"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_FuBarHide" inherits="AtlasLootPanelButtonTemplate">
+				<Size x="150" y="25"/>
+				<Anchors>
+					<Anchor point="TOP" x="85" y="-390"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        if AtlasLootFu then
-                            AtlasLootFu:Hide();
-                        end
+						if AtlasLootFu then
+							AtlasLootFu:Hide()
+						end
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Hide FuBar Plugin"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Hide FuBar Plugin"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
+			</Button>
 		</Frames>
-        <Layers>
-            <Layer level="OVERLAY">
+		<Layers>
+			<Layer level="OVERLAY">
 				<FontString name="AtlasLoot_OptionsTitle" text="ATLASLOOT_VERSION" inherits="GameFontHighlightLarge" justifyH="CENTER">
-					<Size>
-						<AbsDimension x="400" y="30"/>
-					</Size>
+					<Size x="400" y="30"/>
 					<Anchors>
-						<Anchor point="TOP" relativeTo="$parent" relativePoint="TOP"/>
+						<Anchor point="TOP"/>
 					</Anchors>
 				</FontString>
-                <FontString name="$parent_FuBarNotice" inherits="GameFontNormal">
+				<FontString name="$parent_FuBarNotice" inherits="GameFontNormal">
 					<Anchors>
-						<Anchor point="BOTTOM">
-							<Offset>
-								<AbsDimension x="0" y="45"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
-            </Layer>
-        </Layers>
-        <Scripts>
-            <OnLoad>
-				local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-				getglobal("AtlasLootOptionsFrame_FuBarNotice"):SetText(AL["The Minimap Button is generated by the FuBar Plugin."].."\n"..AL["This is automatic, you do not need FuBar installed."]);
-			</OnLoad>
-            <OnShow>
-                AtlasLoot_OptionsOnShow();
-            </OnShow>
-        </Scripts>
-	</Frame>
-    
-    <Frame name="AtlasLootPanel" parent="UIParent" hidden="true">
-        <Size>
-			<AbsDimension x="745" y="110"/>
-		</Size>
-        <Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
-			<BackgroundInsets>
-				<AbsInset left="11" right="12" top="12" bottom="11"/>
-			</BackgroundInsets>
-			<TileSize>
-				<AbsValue val="32"/>
-			</TileSize>
-			<EdgeSize>
-				<AbsValue val="32"/>
-			</EdgeSize>
-		</Backdrop>
-        <Layers>
-			<Layer level="ARTWORK">
-				<Texture name="$parent_Title" file="Interface\DialogFrame\UI-DialogBox-Header">
-					<Size>
-						<AbsDimension x="275" y="59"/>
-					</Size>
-					<Anchors>
-						<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM">
-                            <Offset>
-								<AbsDimension x="0" y="-35"/>
-							</Offset>                        
-                        </Anchor>
-					</Anchors>
-				</Texture>
-				<FontString inherits="GameFontNormal" text="Atlasloot Enhanced">
-					<Anchors>
-						<Anchor point="BOTTOM" relativeTo="$parent_Title" relativePoint="BOTTOM">
-							<Offset>
-								<AbsDimension x="0" y="34"/>
-							</Offset>
-						</Anchor>
+						<Anchor point="BOTTOM" x="0" y="45"/>
 					</Anchors>
 				</FontString>
 			</Layer>
 		</Layers>
-        <Frames>
-            <Button name="$parent_WorldEvents" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parent" relativePoint="LEFT">
-                        <Offset>
-                            <AbsDimension x="15" y="29"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+		<Scripts>
+			<OnLoad>
+				local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+				AtlasLootOptionsFrame_FuBarNotice:SetText(AL["The Minimap Button is generated by the FuBar Plugin."].."\n"..AL["This is automatic, you do not need FuBar installed."])
+			</OnLoad>
+			<OnShow>
+				AtlasLoot_OptionsOnShow()
+			</OnShow>
+		</Scripts>
+	</Frame>
+
+	<Frame name="AtlasLootPanel" parent="UIParent" hidden="true">
+		<Size x="745" y="110"/>
+		<Backdrop bgFile="Interface\DialogFrame\UI-DialogBox-Background" edgeFile="Interface\DialogFrame\UI-DialogBox-Border" tile="true">
+			<BackgroundInsets left="11" right="12" top="12" bottom="11"/>
+			<TileSize val="32"/>
+			<EdgeSize val="32"/>
+		</Backdrop>
+		<Layers>
+			<Layer level="ARTWORK">
+				<Texture name="$parent_Title" file="Interface\DialogFrame\UI-DialogBox-Header">
+					<Size x="275" y="59"/>
+					<Anchors>
+						<Anchor point="BOTTOM" x="0" y="-35"/>
+					</Anchors>
+				</Texture>
+				<FontString inherits="GameFontNormal" text="Atlasloot Enhanced">
+					<Anchors>
+						<Anchor point="BOTTOM" relativeTo="$parent_Title" relativePoint="BOTTOM" x="0" y="34"/>
+					</Anchors>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Button name="$parent_WorldEvents" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" x="15" y="29"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        AtlasLoot_QuickLooks:Hide();
-                        AtlasLootQuickLooksButton:Hide();
-						AtlasLoot_GenerateAtlasMenu("WORLDEVENTMENU", AtlasLoot_AnchorFrame);
+						AtlasLoot_GenerateAtlasMenu("WORLDEVENTMENU")
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["World Events"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["World Events"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_Sets" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parent_WorldEvents" relativePoint="RIGHT">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_Sets" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_WorldEvents" relativePoint="RIGHT" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        AtlasLoot_QuickLooks:Hide();
-                        AtlasLootQuickLooksButton:Hide();
-						AtlasLoot_GenerateAtlasMenu("SETMENU", AtlasLoot_AnchorFrame);
+						AtlasLoot_GenerateAtlasMenu("SETMENU")
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Collections"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Collections"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_Reputation" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parent_Sets" relativePoint="RIGHT">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_Reputation" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Sets" relativePoint="RIGHT" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        AtlasLoot_QuickLooks:Hide();
-                        AtlasLootQuickLooksButton:Hide();
-						AtlasLoot_GenerateAtlasMenu("REPMENU", AtlasLoot_AnchorFrame);
+						AtlasLoot_GenerateAtlasMenu("REPMENU")
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Factions"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Factions"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_PvP" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parent_Reputation" relativePoint="RIGHT">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_PvP" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Reputation" relativePoint="RIGHT" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        AtlasLoot_QuickLooks:Hide();
-                        AtlasLootQuickLooksButton:Hide();
-						AtlasLoot_GenerateAtlasMenu("PVPMENU", AtlasLoot_AnchorFrame);
+						AtlasLoot_GenerateAtlasMenu("PVPMENU")
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["PvP Rewards"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["PvP Rewards"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_Crafting" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parent_PvP" relativePoint="RIGHT">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_Crafting" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_PvP" relativePoint="RIGHT" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        AtlasLoot_QuickLooks:Hide();
-                        AtlasLootQuickLooksButton:Hide();
-						AtlasLoot_GenerateAtlasMenu("CRAFTINGMENU", AtlasLoot_AnchorFrame);
+						AtlasLoot_GenerateAtlasMenu("CRAFTINGMENU")
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Crafting"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Crafting"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_WishList" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="LEFT" relativeTo="$parent_Crafting" relativePoint="RIGHT">
-                        <Offset>
-                            <AbsDimension x="0" y="0"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_WishList" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="LEFT" relativeTo="$parent_Crafting" relativePoint="RIGHT" x="0" y="0"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-                        <!--AtlasLoot_QuickLooks:Hide();
-                        AtlasLootQuickLooksButton:Hide();-->
-						AtlasLoot_ShowWishListDropDown("","","","","",this,true)
+						AtlasLoot_ShowWishListDropDown("", "", "", "", "", self, true)
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Wishlist"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Wishlist"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_Options" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parent_WorldEvents" relativePoint="BOTTOM">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_Options" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent_WorldEvents" relativePoint="BOTTOM" x="0" y="-2"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-						AtlasLootOptions_Toggle();
+						AtlasLootOptions_Toggle()
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Options"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Options"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-	        <Button name="$parent_LoadModules" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parent_Sets" relativePoint="BOTTOM">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
+			</Button>
+			<Button name="$parent_LoadModules" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent_Sets" relativePoint="BOTTOM" x="0" y="-2"/>
+				</Anchors>
+				<Scripts>
 					<OnClick>
-						AtlasLoot_LoadAllModules();
+						AtlasLoot_LoadAllModules()
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Load Modules"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Load Modules"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_Preset1" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parent_Reputation" relativePoint="BOTTOM">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnEnter>
-                        if this:IsEnabled() then
-                            GameTooltip:ClearLines();
-                            GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 2), 5);
-                            GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][1][3]);
-                            GameTooltip:Show();
-                        end
-                    </OnEnter>
-                    <OnLeave>
-                        if(GameTooltip:IsVisible()) then
-                            GameTooltip:Hide();
-                        end
-                    </OnLeave>
+			</Button>
+			<Button name="$parent_Preset1" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent_Reputation" relativePoint="BOTTOM" x="0" y="-2"/>
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+						if self:IsEnabled() then
+							GameTooltip:ClearLines()
+							GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+							GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][1][3])
+							GameTooltip:Show()
+						end
+					</OnEnter>
+					<OnLeave>
+						if GameTooltip:IsVisible() then
+							GameTooltip:Hide()
+						end
+					</OnLeave>
 					<OnClick>
                         if AtlasLoot_IsLootTableAvailable(AtlasLootCharDB["QuickLooks"][1][1]) then
                             if getglobal("AtlasLootPanel"):GetParent() == AtlasFrame then
@@ -1489,38 +1343,34 @@
                             end
                         end
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["QuickLook"].." 1");
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-                        if ((not AtlasLootCharDB["QuickLooks"][1]) or (not AtlasLootCharDB["QuickLooks"][1][1])) or (AtlasLootCharDB["QuickLooks"][1][1]==nil) then
-                            this:Disable();
-                        end
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["QuickLook"].." 1")
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+						if not AtlasLootCharDB["QuickLooks"][1] or not AtlasLootCharDB["QuickLooks"][1][1] then
+							self:Disable()
+						end
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_Preset2" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parent_PvP" relativePoint="BOTTOM">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnEnter>
-                        if this:IsEnabled() then
-                            GameTooltip:ClearLines();
-                            GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 2), 5);
-                            GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][2][3]);
-                            GameTooltip:Show();
-                        end
-                    </OnEnter>
-                    <OnLeave>
-                        if(GameTooltip:IsVisible()) then
-                            GameTooltip:Hide();
-                        end
-                    </OnLeave>
+			</Button>
+			<Button name="$parent_Preset2" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent_PvP" relativePoint="BOTTOM" x="0" y="-2"/>
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+						if self:IsEnabled() then
+							GameTooltip:ClearLines()
+							GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+							GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][2][3])
+							GameTooltip:Show()
+						end
+					</OnEnter>
+					<OnLeave>
+						if GameTooltip:IsVisible() then
+							GameTooltip:Hide()
+						end
+					</OnLeave>
 					<OnClick>
                         if AtlasLoot_IsLootTableAvailable(AtlasLootCharDB["QuickLooks"][2][1]) then
                             if getglobal("AtlasLootPanel"):GetParent() == AtlasFrame then
@@ -1533,38 +1383,34 @@
                             end
                         end
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["QuickLook"].." 2");
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-                        if ((not AtlasLootCharDB["QuickLooks"][2]) or (not AtlasLootCharDB["QuickLooks"][2][1])) or (AtlasLootCharDB["QuickLooks"][2][1]==nil) then
-                            this:Disable();
-                        end
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["QuickLook"].." 2")
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+						if not AtlasLootCharDB["QuickLooks"][2] or not AtlasLootCharDB["QuickLooks"][2][1] then
+							self:Disable()
+						end
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_Preset3" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parent_Crafting" relativePoint="BOTTOM">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnEnter>
-                        if this:IsEnabled() then
-                            GameTooltip:ClearLines();
-                            GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 2), 5);
-                            GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][3][3]);
-                            GameTooltip:Show();
-                        end
-                    </OnEnter>
-                    <OnLeave>
-                        if(GameTooltip:IsVisible()) then
-                            GameTooltip:Hide();
-                        end
-                    </OnLeave>
+			</Button>
+			<Button name="$parent_Preset3" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent_Crafting" relativePoint="BOTTOM" x="0" y="-2"/>
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+						if self:IsEnabled() then
+							GameTooltip:ClearLines()
+							GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+							GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][3][3])
+							GameTooltip:Show()
+						end
+					</OnEnter>
+					<OnLeave>
+						if GameTooltip:IsVisible() then
+							GameTooltip:Hide()
+						end
+					</OnLeave>
 					<OnClick>
                         if AtlasLoot_IsLootTableAvailable(AtlasLootCharDB["QuickLooks"][3][1]) then
                             if getglobal("AtlasLootPanel"):GetParent() == AtlasFrame then
@@ -1577,38 +1423,34 @@
                             end
                         end
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["QuickLook"].." 3");
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-                        if ((not AtlasLootCharDB["QuickLooks"][3]) or (not AtlasLootCharDB["QuickLooks"][3][1])) or (AtlasLootCharDB["QuickLooks"][3][1]==nil) then
-                            this:Disable();
-                        end
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["QuickLook"].." 3")
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+						if not AtlasLootCharDB["QuickLooks"][3] or not AtlasLootCharDB["QuickLooks"][3][1] then
+							self:Disable()
+						end
+					</OnShow>
 				</Scripts>
-            </Button>
-            <Button name="$parent_Preset4" inherits="AtlasLootPanelButtonTemplate">
-                <Anchors>
-                    <Anchor point="TOP" relativeTo="$parent_WishList" relativePoint="BOTTOM">
-                        <Offset>
-                            <AbsDimension x="0" y="-2"/>
-                        </Offset>
-                    </Anchor>
-                </Anchors>
-                <Scripts>
-                    <OnEnter>
-                        if this:IsEnabled() then
-                            GameTooltip:ClearLines();
-                            GameTooltip:SetOwner(this, "ANCHOR_RIGHT", -(this:GetWidth() / 2), 5);
-                            GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][4][3]);
-                            GameTooltip:Show();
-                        end
-                    </OnEnter>
-                    <OnLeave>
-                        if(GameTooltip:IsVisible()) then
-                            GameTooltip:Hide();
-                        end
-                    </OnLeave>
+			</Button>
+			<Button name="$parent_Preset4" inherits="AtlasLootPanelButtonTemplate">
+				<Anchors>
+					<Anchor point="TOP" relativeTo="$parent_WishList" relativePoint="BOTTOM" x="0" y="-2"/>
+				</Anchors>
+				<Scripts>
+					<OnEnter>
+						if self:IsEnabled() then
+							GameTooltip:ClearLines()
+							GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+							GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][4][3])
+							GameTooltip:Show()
+						end
+					</OnEnter>
+					<OnLeave>
+						if GameTooltip:IsVisible() then
+							GameTooltip:Hide()
+						end
+					</OnLeave>
 					<OnClick>
                         if AtlasLoot_IsLootTableAvailable(AtlasLootCharDB["QuickLooks"][4][1]) then
                             if getglobal("AtlasLootPanel"):GetParent() == AtlasFrame then
@@ -1621,90 +1463,74 @@
                             end
                         end
 					</OnClick>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["QuickLook"].." 4");
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-                        if ((not AtlasLootCharDB["QuickLooks"][4]) or (not AtlasLootCharDB["QuickLooks"][4][1])) or (AtlasLootCharDB["QuickLooks"][4][1]==nil) then
-                            this:Disable();
-                        end
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["QuickLook"].." 4")
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+						if not AtlasLootCharDB["QuickLooks"][4] or not AtlasLootCharDB["QuickLooks"][4][1] then
+							self:Disable()
+						end
+					</OnShow>
 				</Scripts>
-            </Button>
-            
-            <EditBox name="AtlasLootSearchBox" inherits="InputBoxTemplate" letters="100">
+			</Button>
+
+			<EditBox name="AtlasLootSearchBox" inherits="InputBoxTemplate" letters="100">
 				<Size>
 					<AbsDimension x="240" y="35"></AbsDimension>
 				</Size>
 				<Anchors>
-					<Anchor point="BOTTOM" relativeTo="$parent" relativePoint="BOTTOM">
-						<Offset>
-							<AbsDimension x="-123" y="20"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="BOTTOM" x="-123" y="20"/>
 				</Anchors>
 				<Scripts>
 					<OnLoad>
-						this:SetAutoFocus(false);
-						this:SetTextInsets(0, 8, 0, 0);
+						self:SetAutoFocus(false)
+						self:SetTextInsets(0, 8, 0, 0)
 					</OnLoad>
 					<OnTextChanged>
-						AtlasLoot:RefreshSearchSuggestions(this);
+						AtlasLoot:RefreshSearchSuggestions(self)
 					</OnTextChanged>
 					<OnEditFocusGained>
-						AtlasLoot:ShowSearchSuggestions(this);
+						AtlasLoot:ShowSearchSuggestions(self)
 					</OnEditFocusGained>
 					<OnMouseDown>
-						AtlasLoot:ShowSearchSuggestions(this);
+						AtlasLoot:ShowSearchSuggestions(self)
 					</OnMouseDown>
 					<OnEditFocusLost>
-						AtlasLoot:HideSearchSuggestions(this);
+						AtlasLoot:HideSearchSuggestions(self)
 					</OnEditFocusLost>
 					<OnTabPressed>
-						AtlasLoot:AutoComplete(this);
+						AtlasLoot:AutoComplete(self)
 					</OnTabPressed>
 					<OnEnterPressed>
-						AtlasLoot:Search(this:GetText());
-						this:ClearFocus();
-						AtlasLoot:HideSearchSuggestions(this);
+						AtlasLoot:Search(self:GetText())
+						self:ClearFocus()
+						AtlasLoot:HideSearchSuggestions(self)
 					</OnEnterPressed>
 				</Scripts>
 				<FontString name="AtlasLootSearchString" inherits="GameFontNormal"></FontString>
 			</EditBox>
-            <Button name="AtlasLootSearchButton" inherits="UIPanelButtonTemplate2" parent="AtlasLootSearchBox">
-				<Size>
-					<AbsDimension x="69" y="32"/>
-				</Size>
+			<Button name="AtlasLootSearchButton" inherits="UIPanelButtonTemplate2" parent="AtlasLootSearchBox">
+				<Size x="69" y="32"/>
 				<Anchors>
-					<Anchor point="LEFT" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
 				<Scripts>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Search"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Search"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 					<OnClick>
-						AtlasLoot:Search(AtlasLootSearchBox:GetText());
-						AtlasLootSearchBox:ClearFocus();
-						AtlasLoot:HideSearchSuggestions(AtlasLootDefaultFrameSearchBox);
+						AtlasLoot:Search(AtlasLootSearchBox:GetText())
+						AtlasLootSearchBox:ClearFocus()
+						AtlasLoot:HideSearchSuggestions(AtlasLootDefaultFrameSearchBox)
 					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="AtlasLootSearchOptionsButton" parent="AtlasLootSearchButton">
-				<Size>
-					<AbsDimension x="28" y="28" />
-				</Size>
+				<Size x="28" y="28" />
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AtlasLootSearchButton" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="-6" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="AtlasLootSearchButton" relativePoint="RIGHT" x="-6" y="0"/>
 				</Anchors>
 				<NormalTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Up"/>
 				<PushedTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Down"/>
@@ -1712,57 +1538,46 @@
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 				<Scripts>
 					<OnShow>
-						this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
 					</OnShow>
 					<OnClick>
-						AtlasLoot:ShowSearchOptions(this);
+						AtlasLoot:ShowSearchOptions(self)
 					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="AtlasLootSearchClearButton" inherits="UIPanelButtonTemplate2" parent="AtlasLootSearchBox">
-				<Size>
-					<AbsDimension x="58" y="32"/>
-				</Size>
+				<Size x="58" y="32"/>
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AtlasLootSearchOptionsButton" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="-2" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="AtlasLootSearchOptionsButton" relativePoint="RIGHT" x="-2" y="0"/>
 				</Anchors>
 				<Scripts>
-                    <OnShow>
-                        local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-                        this:SetText(AL["Clear"]);
-				        this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
-			        </OnShow>
+					<OnShow>
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Clear"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+					</OnShow>
 					<OnClick>
-						AtlasLootSearchBox:SetText("");
-						AtlasLootSearchBox:ClearFocus();
+						AtlasLootSearchBox:SetText("")
+						AtlasLootSearchBox:ClearFocus()
 					</OnClick>
 				</Scripts>
 			</Button>
 			<Button name="AtlasLootLastResultButton" inherits="AtlasLootPanelButtonTemplate">
 				<Anchors>
-					<Anchor point="LEFT" relativeTo="AtlasLootSearchClearButton" relativePoint="RIGHT">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
+					<Anchor point="LEFT" relativeTo="AtlasLootSearchClearButton" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
 				<Scripts>
 					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot");
-						this:SetText(AL["Last Result"]);
-						this:SetFrameLevel( (this:GetParent()):GetFrameLevel() + 1 );
+						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
+						self:SetText(AL["Last Result"])
+						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
 					</OnShow>
 					<OnClick>
-						AtlasLoot:ShowSearchResult();
+						AtlasLoot:ShowSearchResult()
 					</OnClick>
 				</Scripts>
 			</Button>
-        </Frames>
-    </Frame>
+		</Frames>
+	</Frame>
 
 </Ui>
-
