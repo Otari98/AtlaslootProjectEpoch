@@ -194,11 +194,11 @@ function AtlasLoot_ShowWishListDropDown(xitemID, xitemTexture, xitemName, xlootP
 						end,
 						"notCheckable", true
 					)
-					AtlasLoot_WishListDrop:AddLine(
-						"text", AL["Close"],
-						"func", function() AtlasLoot_WishListDrop:Close(1) end,
-						"notCheckable", true
-					)
+					-- AtlasLoot_WishListDrop:AddLine(
+					-- 	"text", AL["Close"],
+					-- 	"func", function() AtlasLoot_WishListDrop:Close(1) end,
+					-- 	"notCheckable", true
+					-- )
 				elseif level == 2 then
 					if value == "OwnWishlists" then
 						for k, v in pairs(AtlasLootWishList["Own"][playerName]) do

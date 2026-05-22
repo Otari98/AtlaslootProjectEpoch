@@ -410,6 +410,9 @@
 			<OnDragStop>
 				self:StopMovingOrSizing()
 			</OnDragStop>
+			<OnMouseUp>
+				CloseDropDownMenus()
+			</OnMouseUp>
 		</Scripts>
 	</Frame>
 

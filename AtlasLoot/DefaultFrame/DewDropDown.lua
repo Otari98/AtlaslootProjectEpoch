@@ -43,7 +43,7 @@ AtlasLoot_DewDropDown = {
 	{
 		[AL["Raids"]] = {
 			{ { BabbleZone["Onyxia's Lair"], "OnyxiasLair", "Submenu" }, },
-			{ { BabbleZone["Molten Core"], "MoltenCore", "Submenu" }, },
+			-- { { BabbleZone["Molten Core"], "MoltenCore", "Submenu" }, },
 		},
 	},
 	{

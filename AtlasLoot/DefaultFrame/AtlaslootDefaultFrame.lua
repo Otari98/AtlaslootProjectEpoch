@@ -168,14 +168,14 @@ function AtlasLoot_DewdropSubMenuRegister(loottable)
                         )
                     end
                 end
-                AtlasLoot_DewdropSubMenu:AddLine(
-                    'text', AL["Close Menu"],
-                    'textR', 0,
-                    'textG', 1,
-                    'textB', 1,
-                    'func', function() AtlasLoot_DewdropSubMenu:Close() end,
-                    'notCheckable', true
-                )
+                -- AtlasLoot_DewdropSubMenu:AddLine(
+                --     'text', AL["Close Menu"],
+                --     'textR', 0,
+                --     'textG', 1,
+                --     'textB', 1,
+                --     'func', function() AtlasLoot_DewdropSubMenu:Close() end,
+                --     'notCheckable', true
+                -- )
             end
         end,
         'dontHook', true
@@ -244,14 +244,14 @@ function AtlasLoot_DewdropRegister()
                     end
                 end
                 --Close button
-                AtlasLoot_Dewdrop:AddLine(
-                    'text', AL["Close Menu"],
-                    'textR', 0,
-                    'textG', 1,
-                    'textB', 1,
-                    'func', function() AtlasLoot_Dewdrop:Close() end,
-                    'notCheckable', true
-                )
+                -- AtlasLoot_Dewdrop:AddLine(
+                --     'text', AL["Close Menu"],
+                --     'textR', 0,
+                --     'textG', 1,
+                --     'textB', 1,
+                --     'func', function() AtlasLoot_Dewdrop:Close() end,
+                --     'notCheckable', true
+                -- )
             elseif level == 2 then
                 if value then
                     for k, v in ipairs(value) do
@@ -318,14 +318,14 @@ function AtlasLoot_DewdropRegister()
                         end
                     end
                 end
-                AtlasLoot_Dewdrop:AddLine(
-                    'text', AL["Close Menu"],
-                    'textR', 0,
-                    'textG', 1,
-                    'textB', 1,
-                    'func', function() AtlasLoot_Dewdrop:Close() end,
-                    'notCheckable', true
-                )
+                -- AtlasLoot_Dewdrop:AddLine(
+                --     'text', AL["Close Menu"],
+                --     'textR', 0,
+                --     'textG', 1,
+                --     'textB', 1,
+                --     'func', function() AtlasLoot_Dewdrop:Close() end,
+                --     'notCheckable', true
+                -- )
             elseif level == 3 then
                 --Essentially the same as level == 2
                 if value then
@@ -382,14 +382,14 @@ function AtlasLoot_DewdropRegister()
                         end
                     end
                 end
-                AtlasLoot_Dewdrop:AddLine(
-                    'text', AL["Close Menu"],
-                    'textR', 0,
-                    'textG', 1,
-                    'textB', 1,
-                    'func', function() AtlasLoot_Dewdrop:Close() end,
-                    'notCheckable', true
-                )
+                -- AtlasLoot_Dewdrop:AddLine(
+                --     'text', AL["Close Menu"],
+                --     'textR', 0,
+                --     'textG', 1,
+                --     'textB', 1,
+                --     'func', function() AtlasLoot_Dewdrop:Close() end,
+                --     'notCheckable', true
+                -- )
             end
         end,
         'dontHook', true
