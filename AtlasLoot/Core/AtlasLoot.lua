@@ -474,6 +474,9 @@ function AtlasLoot_OnLoad(self)
 	end
 	AtlasLootItemsFrame_BACK:SetText(AL["Back"])
 	AtlasLoot_QuickLooks:SetText(AL["Add to QuickLooks:"])
+	self.time = nil
+	self.queue = {}
+	self.refreshCount = 0
 end
 
 --[[
@@ -541,6 +544,13 @@ It is the workhorse of the mod and allows the loot tables to be displayed any wa
 function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 	if not dataID then return end
 
+	if AtlasLootItemsFrame.refresh and (dataID ~= AtlasLootItemsFrame.refresh[1] or dataSource ~= AtlasLootItemsFrame.refresh[2]) then
+		AtlasLootItemsFrame.refreshCount = 0
+	end
+
+	if AtlasLootItemsFrameContainer:IsShown() and AtlasLootItemsFrame.refreshCount == 0 then
+		AtlasLootItemsFrameContainer:Hide()
+	end
 
 	-- Get AtlasQuest out of the way
 	if AtlasQuestInsideFrame then
@@ -673,6 +683,9 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 					else
 						nameFrame:SetText(AtlasLoot_FixText(info[4]))
 						border:SetVertexColor(RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b, 1)
+						if AtlasLoot.CacheItem(info[2]) then
+							AtlasLootItemsFrame.queue[info[2]] = true
+							AtlasLootItemsFrame.time = 0.5
 						end
 					end
 					if info[3] and info[3] ~= "" then
@@ -695,7 +708,27 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 					iconFrame:SetTexture("Interface\\Icons\\INV_Misc_QuestionMark")
 				end
 				itemButton.itemTexture = iconFrame:GetTexture()
+				itemButton.container = info.container
+				if info.container then
+					itemButton.IconBorder:Hide()
+					itemButton.ContainerBorder:Show()
+					for row = 1, #info.container do
+						for col = 1, #info.container[row] do
+							local itemID = info.container[row][col]
+							if AtlasLoot.CacheItem(itemID) then
+								AtlasLootItemsFrame.queue[itemID] = true
+								AtlasLootItemsFrame.time = 0.5
+							end
+						end
 					end
+					itemButton.Icon:SetWidth(22)
+					itemButton.Icon:SetHeight(22)
+				else
+					itemButton.IconBorder:Show()
+					itemButton.Icon:SetWidth(27)
+					itemButton.Icon:SetHeight(27)
+					itemButton.ContainerBorder:Hide()
+				end
 				extraFrame:SetText(AtlasLoot_FixText(info[5]))
 
 				if isSpell then
@@ -706,7 +739,13 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 					itemButton.dressingroomID = itemButton.itemID
 				end
 
+				itemButton.hasItem = IsEquippableItem(itemButton.dressingroomID)
+
 				itemButton.spellitemID = tonumber(info[3]) or 0
+				if AtlasLoot.CacheItem(itemButton.spellitemID) then
+					AtlasLootItemsFrame.queue[itemButton.spellitemID] = true
+					AtlasLootItemsFrame.time = 0.5
+				end
 
 				if info[7] and info[7] ~= "" then
 					itemButton.droprate = info[7]
@@ -838,6 +877,13 @@ This function allows menus to be defined in essentially the same way as
 normal loot tables
 ]]
 function AtlasLoot_GenerateAtlasMenu(dataID)
+	if AtlasLootItemsFrame.refresh and dataID ~= AtlasLootItemsFrame.refresh[1] then
+		AtlasLootItemsFrame.refreshCount = 0
+	end
+	if AtlasLootItemsFrameContainer:IsShown() and AtlasLootItemsFrame.refreshCount == 0 then
+		AtlasLootItemsFrameContainer:Hide()
+	end
+
 	AtlasLoot.db.profile.LastBoss = dataID
 
 	--Hide UI objects so that only needed ones are shown
@@ -861,6 +907,7 @@ function AtlasLoot_GenerateAtlasMenu(dataID)
 
 			itemButton.itemTexture = info[3]
 			itemButton.lootpage = info[2]
+			itemButton.container = info.container
 			itemButton.hasItem = false
 			local class = string.upper(info[3])
 			local coords = CLASS_ICON_TCOORDS[class]
@@ -874,6 +921,27 @@ function AtlasLoot_GenerateAtlasMenu(dataID)
 			nameFrame:SetText(AtlasLoot_FixText(info[4] or ""))
 			extraFrame:SetText(AtlasLoot_FixText(info[5] or ""))
 			border:SetVertexColor(1, 1, 1, 1)
+			itemButton.ContainerBorder:SetVertexColor(1, 1, 1, 1)
+			if itemButton.container then
+				border:Hide()
+				itemButton.ContainerBorder:Show()
+				for row = 1, #itemButton.container do
+					for col = 1, #itemButton.container[row] do
+						local itemID = itemButton.container[row][col]
+						if AtlasLoot.CacheItem(itemID) then
+							AtlasLootItemsFrame.queue[itemID] = true
+							AtlasLootItemsFrame.time = 0.5
+						end
+					end
+				end
+				itemButton.Icon:SetWidth(22)
+				itemButton.Icon:SetHeight(22)
+			else
+				border:Show()
+				itemButton.ContainerBorder:Hide()
+				itemButton.Icon:SetWidth(27)
+				itemButton.Icon:SetHeight(27)
+			end
 
 			itemButton:Show()
 		end
@@ -1211,3 +1279,39 @@ function AtlasLoot_AddTooltip(frameb, tooltiptext)
 	frame:SetScript("OnLeave", GameTooltip_Hide)
 end
 
+function AtlasLoot.CacheItem(item)
+	if not item then return false end
+	local id = tonumber(item) or string.match(item, "item:(%d+)") or 0
+	if id < 1 then return false end
+
+	if GetItemInfo(id) then return false end
+
+	local tooltip = AtlasLootScanTooltip or CreateFrame("GameTooltip", "AtlasLootScanTooltip", nil, "GameTooltipTemplate")
+	tooltip:SetOwner(WorldFrame, "ANCHOR_NONE")
+	tooltip:SetHyperlink("item:"..id)
+	return true
+end
+
+function AtlasLootItemsFrame_OnUpdate(self, elapsed)
+	if not self.time then return end
+	self.time = self.time - elapsed
+	local ready = true
+	for itemID in pairs(self.queue) do
+		if not GetItemInfo(itemID) then
+			ready = false
+			break
+		end
+	end
+	if self.time <= 0 or ready then
+		-- local size = 0
+		-- for _ in pairs(self.queue) do size = size + 1 end
+		-- print(format("caching %d items on this page took %.3f sec", size, 0.5 - max(0, self.time)))
+		self.time = nil
+		table.wipe(self.queue)
+		local refresh = self.refresh
+		if refresh and self.refreshCount == 0 then
+			AtlasLoot_ShowItemsFrame(refresh[1], refresh[2], refresh[3])
+			self.refreshCount = self.refreshCount + 1
+		end
+	end
+end

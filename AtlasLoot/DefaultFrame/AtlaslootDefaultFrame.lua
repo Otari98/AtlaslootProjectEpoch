@@ -403,100 +403,99 @@ Create the new Default Frame style
 	style = "old"
 ]]
 function AtlasLoot_SetNewStyle(style)
+    local buttons = {
+        "AtlasLootDefaultFrame_Options",
+        "AtlasLootDefaultFrame_LoadModules",
+        "AtlasLootDefaultFrame_Menu",
+        "AtlasLootDefaultFrame_SubMenu",
+        "AtlasLootDefaultFrame_Preset1",
+        "AtlasLootDefaultFrame_Preset2",
+        "AtlasLootDefaultFrame_Preset3",
+        "AtlasLootDefaultFrame_Preset4",
+        "AtlasLootDefaultFrameSearchButton",
+        "AtlasLootDefaultFrameSearchClearButton",
+        "AtlasLootDefaultFrameLastResultButton",
+        "AtlasLootDefaultFrameWishListButton"
+    }
 
-	local buttons = {
-		"AtlasLootDefaultFrame_Options",
-		"AtlasLootDefaultFrame_LoadModules",
-		"AtlasLootDefaultFrame_Menu",
-		"AtlasLootDefaultFrame_SubMenu",
-		"AtlasLootDefaultFrame_Preset1",
-		"AtlasLootDefaultFrame_Preset2",
-		"AtlasLootDefaultFrame_Preset3",
-		"AtlasLootDefaultFrame_Preset4",
-		"AtlasLootDefaultFrameSearchButton",
-		"AtlasLootDefaultFrameSearchClearButton",
-		"AtlasLootDefaultFrameLastResultButton",
-		"AtlasLootDefaultFrameWishListButton"
-	}
-	
-	if style == "new" then
-		AtlasLootDefaultFrame_LootBackground:SetBackdrop({bgFile = "Interface/AchievementFrame/UI-Achievement-StatsBackground"});
-		AtlasLootDefaultFrame_LootBackground:SetBackdropColor(1,1,1,0.5)
-		AtlasLootDefaultFrame:SetBackdrop({bgFile = "Interface/AchievementFrame/UI-Achievement-AchievementBackground", 
-			  edgeFile = "Interface/Tooltips/UI-Tooltip-Border", 
-			  edgeSize = 16, 
-			  insets = { left = 4, right = 4, top = 4, bottom = 4 }});
-		AtlasLootDefaultFrame:SetBackdropColor(1,1,1,0.5)
-		AtlasLootDefaultFrame:SetBackdropBorderColor(1,0.675,0.125,1)
-		AtlasLootDefaultFrameHeader:SetTexture("Interface\\AchievementFrame\\UI-Achievement-Alert-Background.blp")
-		AtlasLootDefaultFrameHeader:SetTexCoord(0,0.605,0,0.703)
-		AtlasLootDefaultFrameHeader:SetWidth(299)
-		AtlasLootDefaultFrameHeader:SetHeight(60)
-		AtlasLootDefaultFrameHeader:SetPoint("TOP",AtlasLootDefaultFrame,"TOP",-3,22)
+    if style == "new" then
+        AtlasLootDefaultFrame_LootBackground:SetBackdrop({ bgFile = "Interface/AchievementFrame/UI-Achievement-StatsBackground" })
+        AtlasLootDefaultFrame_LootBackground:SetBackdropColor(1, 1, 1, 0.5)
+        AtlasLootDefaultFrame:SetBackdrop({
+            bgFile = "Interface/AchievementFrame/UI-Achievement-AchievementBackground",
+            edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+            edgeSize = 16,
+            insets = { left = 4, right = 4, top = 4, bottom = 4 }
+        })
+        AtlasLootDefaultFrame:SetBackdropColor(1, 1, 1, 0.5)
+        AtlasLootDefaultFrame:SetBackdropBorderColor(1, 0.675, 0.125, 1)
+        -- AtlasLootDefaultFrameHeader:SetTexture("Interface\\AchievementFrame\\UI-Achievement-Alert-Background.blp")
+        AtlasLootDefaultFrameHeader:SetTexture("Interface\\AchievementFrame\\UI-Achievement-Category-Background")
+        -- AtlasLootDefaultFrameHeader:SetTexCoord(0, 0.605, 0, 0.703)
+        AtlasLootDefaultFrameHeader:SetWidth(300)
+        AtlasLootDefaultFrameHeader:SetHeight(50)
+        AtlasLootDefaultFrameHeader:SetPoint("TOP", AtlasLootDefaultFrame, "TOP", 51, 15)
 
-		AtlasLootDefaultFrame_Options:SetNormalTexture("Interface/AchievementFrame/UI-Achievement-Category-Background")
-		AtlasLootDefaultFrame_Options:SetHeight(24)
-		AtlasLootDefaultFrame_Options:SetPushedTexture("Interface/AchievementFrame/UI-Achievement-Category-Background")
-		AtlasLootDefaultFrame_Options:SetHeight(24)
+        AtlasLootDefaultFrame_Options:SetNormalTexture("Interface/AchievementFrame/UI-Achievement-Category-Background")
+        AtlasLootDefaultFrame_Options:SetHeight(24)
+        AtlasLootDefaultFrame_Options:SetPushedTexture("Interface/AchievementFrame/UI-Achievement-Category-Background")
+        AtlasLootDefaultFrame_Options:SetHeight(24)
 
-		local function SetButtons(path)
-		   getglobal(path):SetNormalTexture("Interface/AchievementFrame/UI-Achievement-Category-Background")
-		   getglobal(path):SetHeight(24)
-		   getglobal(path):SetPushedTexture("Interface/AchievementFrame/UI-Achievement-Category-Background")
-		   getglobal(path):SetHeight(24)
-		   local tex = getglobal(path):GetNormalTexture();
-		   tex:SetTexCoord(0, 0.6640625, 0, 0.8);
-		   tex:SetHeight(32)
-		   
-		   local tex2 = getglobal(path):GetPushedTexture();
-		   tex2:SetTexCoord(0, 0.6640625, 0, 0.8);
-		   tex2:SetHeight(32)
-		end
+        local function SetButtons(path)
+            _G[path]:SetNormalTexture("Interface/AchievementFrame/UI-Achievement-Category-Background")
+            _G[path]:SetHeight(24)
+            _G[path]:SetPushedTexture("Interface/AchievementFrame/UI-Achievement-Category-Background")
+            _G[path]:SetHeight(24)
+            local tex = _G[path]:GetNormalTexture()
+            tex:SetTexCoord(0, 0.6640625, 0, 0.8)
+            tex:SetHeight(32)
+            local tex2 = _G[path]:GetPushedTexture()
+            tex2:SetTexCoord(0, 0.6640625, 0, 0.8)
+            tex2:SetHeight(32)
+        end
 
-		for k,v in pairs(buttons) do
-		   SetButtons(v)
-		end
-	elseif style == "old" then
-	
-		AtlasLootDefaultFrame_LootBackground:SetBackdrop({bgFile = ""});
-		AtlasLootDefaultFrame_LootBackground:SetBackdropColor(0,0,0.5,0.5)	
-		
-		AtlasLootDefaultFrame:SetBackdrop({bgFile = "Interface/DialogFrame/UI-DialogBox-Background", 
-			  edgeFile = "Interface/DialogFrame/UI-DialogBox-Border", 
-			  edgeSize = 32, 
-			  insets = { left = 11, right = 12, top = 12, bottom = 11 }});
-		AtlasLootDefaultFrame:SetBackdropColor(1,1,1,1)
-		AtlasLootDefaultFrame:SetBackdropBorderColor(1,1,1,1)
-		
-		
-		AtlasLootDefaultFrameHeader:SetTexture("Interface/DialogFrame/UI-DialogBox-Header")
-		AtlasLootDefaultFrameHeader:SetTexCoord(0,1,0,1)
-		AtlasLootDefaultFrameHeader:SetWidth(425)
-		AtlasLootDefaultFrameHeader:SetHeight(64)
-		AtlasLootDefaultFrameHeader:SetPoint("TOP",AtlasLootDefaultFrame,"TOP",0,12)
+        for k, v in pairs(buttons) do
+            SetButtons(v)
+        end
+    elseif style == "old" then
+        AtlasLootDefaultFrame_LootBackground:SetBackdrop({ bgFile = "Interface\\Buttons\\WHITE8x8" })
+        AtlasLootDefaultFrame_LootBackground:SetBackdropColor(0, 0, 0, 0.2)
+        AtlasLootDefaultFrame:SetBackdrop({
+            bgFile = "Interface/DialogFrame/UI-DialogBox-Background",
+            edgeFile = "Interface/DialogFrame/UI-DialogBox-Border",
+            edgeSize = 32,
+            insets = { left = 11, right = 12, top = 12, bottom = 11 }
+        })
+        AtlasLootDefaultFrame:SetBackdropColor(1, 1, 1, 1)
+        AtlasLootDefaultFrame:SetBackdropBorderColor(1, 1, 1, 1)
 
-		AtlasLootDefaultFrame_Options:SetNormalTexture("Interface/Buttons/UI-Panel-Button-Up")
-		AtlasLootDefaultFrame_Options:SetHeight(20)
-		AtlasLootDefaultFrame_Options:SetPushedTexture("Interface/Buttons/UI-Panel-Button-Down")
-		AtlasLootDefaultFrame_Options:SetHeight(20)
+        AtlasLootDefaultFrameHeader:SetTexture("Interface/DialogFrame/UI-DialogBox-Header")
+        AtlasLootDefaultFrameHeader:SetTexCoord(0, 1, 0, 1)
+        AtlasLootDefaultFrameHeader:SetWidth(425)
+        AtlasLootDefaultFrameHeader:SetHeight(64)
+        AtlasLootDefaultFrameHeader:SetPoint("TOP", AtlasLootDefaultFrame, "TOP", 0, 12)
 
-		local function SetButtons(path)
-		   getglobal(path):SetNormalTexture("Interface/Buttons/UI-Panel-Button-Up")
-		   getglobal(path):SetHeight(20)
-		   getglobal(path):SetPushedTexture("Interface/Buttons/UI-Panel-Button-Down")
-		   getglobal(path):SetHeight(20)
-		   local tex = getglobal(path):GetNormalTexture();
-		   tex:SetTexCoord(0, 0.625, 0, 0.6875);
-		   tex:SetHeight(20)
-		   
-		   local tex2 = getglobal(path):GetPushedTexture();
-		   tex2:SetTexCoord(0, 0.625, 0, 0.6875);
-		   tex2:SetHeight(20)
-		end
+        AtlasLootDefaultFrame_Options:SetNormalTexture("Interface/Buttons/UI-Panel-Button-Up")
+        AtlasLootDefaultFrame_Options:SetHeight(20)
+        AtlasLootDefaultFrame_Options:SetPushedTexture("Interface/Buttons/UI-Panel-Button-Down")
+        AtlasLootDefaultFrame_Options:SetHeight(20)
 
-		for k,v in pairs(buttons) do
-		   SetButtons(v)
-		end
-		
-	end
+        local function SetButtons(path)
+            _G[path]:SetNormalTexture("Interface/Buttons/UI-Panel-Button-Up")
+            _G[path]:SetHeight(20)
+            _G[path]:SetPushedTexture("Interface/Buttons/UI-Panel-Button-Down")
+            _G[path]:SetHeight(20)
+            local tex = _G[path]:GetNormalTexture()
+            tex:SetTexCoord(0, 0.625, 0, 0.6875)
+            tex:SetHeight(20)
+
+            local tex2 = _G[path]:GetPushedTexture()
+            tex2:SetTexCoord(0, 0.625, 0, 0.6875)
+            tex2:SetHeight(20)
+        end
+
+        for k, v in pairs(buttons) do
+            SetButtons(v)
+        end
+    end
 end

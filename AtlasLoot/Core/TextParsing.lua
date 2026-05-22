@@ -15,6 +15,16 @@ function AtlasLoot_FixText(text)
 
     -- Classes
     if string.find(text, "#c") then
+        text = gsub(text, "#cc1#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.DRUID.r * 255, RAID_CLASS_COLORS.DRUID.g * 255, RAID_CLASS_COLORS.DRUID.b * 255, LOCALIZED_CLASS_NAMES_MALE.DRUID))
+        text = gsub(text, "#cc2#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.HUNTER.r * 255, RAID_CLASS_COLORS.HUNTER.g * 255, RAID_CLASS_COLORS.HUNTER.b * 255, LOCALIZED_CLASS_NAMES_MALE.HUNTER))
+        text = gsub(text, "#cc3#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.MAGE.r * 255, RAID_CLASS_COLORS.MAGE.g * 255, RAID_CLASS_COLORS.MAGE.b * 255, LOCALIZED_CLASS_NAMES_MALE.MAGE))
+        text = gsub(text, "#cc4#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.PALADIN.r * 255, RAID_CLASS_COLORS.PALADIN.g * 255, RAID_CLASS_COLORS.PALADIN.b * 255, LOCALIZED_CLASS_NAMES_MALE.PALADIN))
+        text = gsub(text, "#cc5#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.PRIEST.r * 255, RAID_CLASS_COLORS.PRIEST.g * 255, RAID_CLASS_COLORS.PRIEST.b * 255, LOCALIZED_CLASS_NAMES_MALE.PRIEST))
+        text = gsub(text, "#cc6#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.ROGUE.r * 255, RAID_CLASS_COLORS.ROGUE.g * 255, RAID_CLASS_COLORS.ROGUE.b * 255, LOCALIZED_CLASS_NAMES_MALE.ROGUE))
+        text = gsub(text, "#cc7#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.SHAMAN.r * 255, RAID_CLASS_COLORS.SHAMAN.g * 255, RAID_CLASS_COLORS.SHAMAN.b * 255, LOCALIZED_CLASS_NAMES_MALE.SHAMAN))
+        text = gsub(text, "#cc8#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.WARLOCK.r * 255, RAID_CLASS_COLORS.WARLOCK.g * 255, RAID_CLASS_COLORS.WARLOCK.b * 255, LOCALIZED_CLASS_NAMES_MALE.WARLOCK))
+        text = gsub(text, "#cc9#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.WARRIOR.r * 255, RAID_CLASS_COLORS.WARRIOR.g * 255, RAID_CLASS_COLORS.WARRIOR.b * 255, LOCALIZED_CLASS_NAMES_MALE.WARRIOR))
+        text = gsub(text, "#cc10#", format("|cff%.2x%.2x%.2x%s|r", RAID_CLASS_COLORS.DEATHKNIGHT.r * 255, RAID_CLASS_COLORS.DEATHKNIGHT.r * 255, RAID_CLASS_COLORS.DEATHKNIGHT.b * 255, LOCALIZED_CLASS_NAMES_MALE.DEATHKNIGHT))
         text = gsub(text, "#c1#", LOCALIZED_CLASS_NAMES_MALE["DRUID"])
         text = gsub(text, "#c2#", LOCALIZED_CLASS_NAMES_MALE["HUNTER"])
         text = gsub(text, "#c3#", LOCALIZED_CLASS_NAMES_MALE["MAGE"])

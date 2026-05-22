@@ -18,6 +18,7 @@ local AL = AceLocale:NewLocale("AtlasLoot", "enUS", true)
 --Register translations
 if AL then
 	-- Text strings for UI objects
+	AL["SpellID:"] = true
 	AL["AtlasLoot"] = true
 	AL["Select Loot Table"] = true
 	AL["Select Sub-Table"] = true

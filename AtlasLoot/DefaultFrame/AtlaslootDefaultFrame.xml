@@ -106,17 +106,6 @@
 				<Anchors>
 					<Anchor point="BOTTOM" x="0" y="90"/>
 				</Anchors>
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture name="$parent_Back">
-							<Anchors>
-								<Anchor point="TOPLEFT" relativeTo="$parent" relativePoint="TOPLEFT"/>
-								<Anchor point="BOTTOMRIGHT" relativeTo="$parent" relativePoint="BOTTOMRIGHT"/>
-							</Anchors>
-							<Color r="0" g="0" b="0.5" a="0.5"/>
-						</Texture>
-					</Layer>
-				</Layers>
 			</Frame>
 			<Button name="$parent_Preset1" inherits="AtlasLootDefaultFrameButtonTemplate">
 				<Anchors>
@@ -148,7 +137,7 @@
                         if not AtlasLootCharDB["QuickLooks"][1] or not AtlasLootCharDB["QuickLooks"][1][1] then
                             self:Disable()
                         end
-			        </OnShow>
+					</OnShow>
 				</Scripts>
 			</Button>
 			<Button name="$parent_Preset2" inherits="AtlasLootDefaultFrameButtonTemplate">
