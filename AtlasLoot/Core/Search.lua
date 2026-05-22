@@ -17,7 +17,7 @@ local SearchSuggestions = {} -- Current suggestions
 local MAXSUGGESTIONS = 10    -- How many suggestions to show in the popup
 
 function AtlasLoot:ShowSearchResult()
-	AtlasLoot_ShowItemsFrame("SearchResult", "SearchResultPage"..currentPage, (AL["Search Result: %s"]):format(AtlasLootCharDB.LastSearchedText or ""), pFrame);
+	AtlasLoot_ShowItemsFrame("SearchResult", "SearchResultPage"..currentPage, (AL["Search Result: %s"]):format(AtlasLootCharDB.LastSearchedText or ""))
 end
 
 -- Get the item/spell name from a database entry

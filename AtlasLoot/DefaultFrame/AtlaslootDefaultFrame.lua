@@ -33,12 +33,12 @@ Called when a button in AtlasLoot_Dewdrop is clicked
 ]]
 function AtlasLoot_DewDropClick(tablename, text, tabletype)
     --Definition of where I want the loot table to be shown
-    pFrame = { "TOPLEFT", "AtlasLootDefaultFrame_LootBackground", "TOPLEFT", "2", "-2" };
-    
+    AtlasLoot.AnchorPoint = AtlasLoot.AnchorDefault
+
     --If the button clicked was linked to a loot table
     if tabletype == "Table" then
         --Show the loot table
-        AtlasLoot_ShowItemsFrame(tablename, "", text, pFrame);
+        AtlasLoot_ShowItemsFrame(tablename, "", text)
         --Save needed info for fuure re-display of the table
         AtlasLoot.db.profile.LastBoss = tablename
         --Purge the text label for the submenu and disable the submenu
@@ -50,7 +50,7 @@ function AtlasLoot_DewDropClick(tablename, text, tabletype)
         --Enable the submenu button
         AtlasLootDefaultFrame_SubMenu:Enable()
         --Show the first loot table associated with the submenu
-        AtlasLoot_ShowBossLoot(AtlasLoot_DewDropDown_SubTables[tablename][1][2], AtlasLoot_DewDropDown_SubTables[tablename][1][1], pFrame);
+        AtlasLoot_ShowBossLoot(AtlasLoot_DewDropDown_SubTables[tablename][1][2])
         --Save needed info for fuure re-display of the table
         AtlasLoot.db.profile.LastBoss = AtlasLoot_DewDropDown_SubTables[tablename][1][2]
         --Load the correct submenu and associated with the button
@@ -78,9 +78,10 @@ Called when a button in AtlasLoot_DewdropSubMenu is clicked
 ]]
 function AtlasLoot_DewDropSubMenuClick(tablename, text)
     --Definition of where I want the loot table to be shown
-    pFrame = { "TOPLEFT", "AtlasLootDefaultFrame_LootBackground", "TOPLEFT", "2", "-2" };
+    AtlasLoot.AnchorPoint = AtlasLoot.AnchorDefault
+
     --Show the select loot table
-    AtlasLoot_ShowItemsFrame(tablename, "", text, pFrame);
+    AtlasLoot_ShowItemsFrame(tablename, "", text)
     --Save needed info for fuure re-display of the table
     AtlasLoot.db.profile.LastBoss = tablename
     --Show the table that has been selected
@@ -98,20 +99,26 @@ AtlasLootDefaultFrame_OnShow:
 Called whenever the loot browser is shown and sets up buttons and loot tables
 ]]
 function AtlasLootDefaultFrame_OnShow()
-    --Definition of where I want the loot table to be shown    
-    pFrame = { "TOPLEFT", "AtlasLootDefaultFrame_LootBackground", "TOPLEFT", "2", "-2" };
+    --Definition of where I want the loot table to be shown
+    AtlasLoot.AnchorPoint = AtlasLoot.AnchorDefault
+
     --Having the Atlas and loot browser frames shown at the same time would
     --cause conflicts, so I hide the Atlas frame when the loot browser appears
     if AtlasFrame then
         AtlasFrame:Hide()
     end
     --Remove the selection of a loot table in Atlas
-    AtlasLootItemsFrame.activeLootPage = nil;
-    --Set the item table to the loot table
-    AtlasLoot_SetItemInfoFrame(pFrame);
+    AtlasLootItemsFrame.activeLootPage = nil
     --Show the last displayed loot table
-    if AtlasLoot_IsLootTableAvailable(AtlasLoot.db.profile.LastBoss) then
-        AtlasLoot_ShowBossLoot(AtlasLoot.db.profile.LastBoss, "", pFrame);
+    if AtlasLoot.db.profile.LastBoss == "WishList" then
+        AtlasLoot_ShowWishList()
+        return
+    elseif AtlasLoot.db.profile.LastBoss == "SearchResult" then
+        AtlasLoot:ShowSearchResult()
+        return
+    end
+    if AtlasLootItemsFrame.refresh then
+        AtlasLoot_ShowBossLoot(AtlasLootItemsFrame.refresh[1])
     else
         AtlasLoot_ShowBossLoot("EmptyTable", AL["Select a Loot Table..."], pFrame);
     end

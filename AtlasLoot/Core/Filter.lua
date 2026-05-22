@@ -169,10 +169,8 @@ local ClassHides = {
 AtlasLoot_Data["FilterList"] = {}
 
 function AtlasLoot_HideNoUsableItems()
-	local dataID = AtlasLootItemsFrame.refreshOri[1] 
-	local dataSource = AtlasLootItemsFrame.refreshOri[2] 
-	local boss = AtlasLootItemsFrame.refreshOri[3] 
-	local pFrame = AtlasLootItemsFrame.refreshOri[4] 	
+	local dataID = AtlasLootItemsFrame.refreshOri[1]
+	local dataSource = AtlasLootItemsFrame.refreshOri[2]
 	local tablebase = AtlasLoot_Data[dataID]
 	if not tablebase or dataID == "WishList" or dataID == "SearchResult" or dataSource == "AtlasLootCrafting" then return end
 	table.sort(tablebase, function(a, b) return a[1] < b[1] end) -- Sort the loot table to ensure ascending slot order
@@ -282,9 +280,9 @@ function AtlasLoot_HideNoUsableItems()
 	if tablebase.Back then
 		AtlasLoot_Data["FilterList"].Back = tablebase.Back
 	end
-	AtlasLoot_ShowItemsFrame("FilterList", "AtlasLootFilter", "", AtlasLootItemsFrame.refresh[4])
 
 	AtlasLoot_TableNames["FilterList"] = { AtlasLoot_TableNames[dataID][1], AtlasLoot_TableNames[dataID][2] }
+	AtlasLoot_ShowItemsFrame("FilterList", "AtlasLootFilter", "")
 end
 
 function AtlasLoot_SetupFilterButton()
@@ -302,7 +300,7 @@ end
 function AtlasLoot_FilterEnableButton()
 	if ATLASLOOT_FILTER_ENABLE == true then
 		ATLASLOOT_FILTER_ENABLE = false
-		AtlasLoot_ShowItemsFrame(AtlasLootItemsFrame.refreshOri[1], AtlasLootItemsFrame.refreshOri[2], AtlasLootItemsFrame.refreshOri[3], AtlasLootItemsFrame.refreshOri[4])
+		AtlasLoot_ShowItemsFrame(AtlasLootItemsFrame.refreshOri[1], AtlasLootItemsFrame.refreshOri[2], AtlasLootItemsFrame.refreshOri[3])
 	else
 		ATLASLOOT_FILTER_ENABLE = true
 		AtlasLoot_HideNoUsableItems()

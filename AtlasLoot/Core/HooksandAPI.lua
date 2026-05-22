@@ -340,31 +340,24 @@ function AtlasLoot_AtlasScrollBar_Update()
 end
 
 --[[
-AtlasLoot_ShowBossLoot(dataID, boss, pFrame):
+AtlasLoot_ShowBossLoot(dataID):
 dataID - Name of the loot table
-boss - Text string to be used as the title for the loot page
-pFrame - Data structure describing how and where to anchor the item frame (more details, see the function AtlasLoot_SetItemInfoFrame)
 This is the intended API for external mods to use for displaying loot pages.
 This function figures out where the loot table is stored, then sends the relevant info to AtlasLoot_ShowItemsFrame
 ]]
-function AtlasLoot_ShowBossLoot(dataID, boss, pFrame)
+function AtlasLoot_ShowBossLoot(dataID)
+    if not AtlasLoot_IsLootTableAvailable(dataID) then return end
 
-    local tableavailable = AtlasLoot_IsLootTableAvailable(dataID);
-    
-    if (tableavailable) then
-        AtlasLootItemsFrame:Hide();
-
-        --If the loot table is already being displayed, it is hidden and the current table selection cancelled
-        if ( dataID == AtlasLootItemsFrame.externalBoss ) and (AtlasLootItemsFrame:GetParent() ~= AtlasFrame) and (AtlasLootItemsFrame:GetParent() ~= AtlasLootDefaultFrame_LootBackground) then
-            AtlasLootItemsFrame.externalBoss = nil;
-        else
-            --Use the original WoW instance data by default
-            local dataSource = AtlasLoot_TableNames[dataID][2];
-
-            --Set anchor point, set selected table and call AtlasLoot_ShowItemsFrame
-            AtlasLoot_AnchorFrame = pFrame;
-            AtlasLootItemsFrame.externalBoss = dataID;
-            AtlasLoot_ShowItemsFrame(dataID, dataSource, boss, pFrame);
-        end
+    local parent = AtlasLootItemsFrame:GetParent()
+    --If the loot table is already being displayed, it is hidden and the current table selection cancelled
+    if dataID == AtlasLootItemsFrame.externalBoss and parent ~= AtlasFrame and parent ~= AtlasLootDefaultFrame then
+        AtlasLootItemsFrame.externalBoss = nil
+        AtlasLootItemsFrame:Hide()
+    else
+        local dataSource = AtlasLoot_TableNames[dataID][2]
+        local title = AtlasLoot_TableNames[dataID][1] or ""
+        AtlasLootItemsFrame.externalBoss = dataID
+        AtlasLootItemsFrame:Hide()
+        AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
     end
 end

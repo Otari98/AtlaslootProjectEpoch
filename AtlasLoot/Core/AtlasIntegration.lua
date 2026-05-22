@@ -20,9 +20,8 @@ function AtlasLoot_SetupForAtlas()
     AtlasLootPanel:SetPoint("TOP", "AtlasFrame", "BOTTOM", 0, 9)
 
     --Anchor the loot table to the Atlas frame
-    AtlasLoot_SetItemInfoFrame();
-    AtlasLootItemsFrame:Hide();
-    AtlasLoot_AnchorFrame = AtlasFrame;	
+    AtlasLootItemsFrame:Hide()
+    AtlasLoot.AnchorPoint = AtlasLoot.AnchorAtlas
 end
 
 --[[
