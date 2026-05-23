@@ -323,3 +323,26 @@ function AtlasLoot_ShowContainerFrame(self)
     AtlasLootItemsFrameContainer:SetWidth(16 + (maxCols * 35))
     AtlasLootItemsFrameContainer:SetHeight(16 + (row * 35))
 end
+
+function AtlasLootQuickLookButton_OnClick(self, button, down)
+    local id = self:GetID()
+    if AtlasLoot_IsLootTableAvailable(AtlasLootCharDB["QuickLooks"][id][1]) then
+        AtlasLoot_ShowItemsFrame(AtlasLootCharDB["QuickLooks"][id][1], AtlasLootCharDB["QuickLooks"][id][2], AtlasLootCharDB["QuickLooks"][id][3])
+    end
+end
+
+function AtlasLootQuickLookButton_OnEnter(self)
+    local id = self:GetID()
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -(self:GetWidth() / 2), 0)
+    GameTooltip:AddLine(AtlasLootCharDB["QuickLooks"][id][3])
+    GameTooltip:Show()
+end
+
+function AtlasLootQuickLookButton_OnShow(self)
+    local id = self:GetID()
+    self:SetText(AL["QuickLook"].." "..id)
+    if not AtlasLootCharDB["QuickLooks"][id] or not AtlasLootCharDB["QuickLooks"][id][1] then
+        self:Disable()
+    end
+end
+
