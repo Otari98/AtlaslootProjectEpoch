@@ -4,18 +4,15 @@ Author Daviesh
 Loot browser associating loot with instance bosses
 
 Functions:
-AtlasLoot_OnEvent(event)
+AtlasLootItemsFrame_OnEvent(event)
 AtlasLoot_ShowMenu()
-AtlasLoot_OnVariablesLoaded()
-AtlasLoot_SlashCommand(msg)
 AtlasLootOptions_Toggle()
-AtlasLoot_OnLoad()
+AtlasLootItemsFrame_OnLoad()
 AtlasLootBoss_OnClick()
 AtlasLoot_ShowItemsFrame()
 AtlasLoot_GenerateAtlasMenu(dataID, pFrame)
 AtlasLoot_SetupForAtlas()
 AtlasLoot_SetItemInfoFrame()
-AtlasLootItemsFrame_OnCloseButton()
 AtlasLootMenuItem_OnClick()
 AtlasLoot_NavButton_OnClick()
 AtlasLoot_HeroicModeToggle()
@@ -78,9 +75,7 @@ AtlasLoot.AnchorAlphaMap = { "TOPLEFT", "AlphaMapAlphaMapFrame", "TOPLEFT", 0, 0
 AtlasLoot.AnchorPoint = AtlasLoot.AnchorDefault
 
 --Variables to hold hooked Atlas functions
-Hooked_Atlas_Refresh = nil
-Hooked_Atlas_OnShow = nil
-Hooked_AtlasScrollBar_Update = nil
+AtlasLoot.hooks = {}
 
 AtlasLootCharDB = {}
 
@@ -156,32 +151,45 @@ StaticPopupDialogs["ATLASLOOT_OLD_ATLAS"] = {
 	hideOnEscape = 1
 }
 
---[[
-AtlasLoot_OnEvent(event):
-event - Name of the event, passed from the API
-Invoked whenever a relevant event is detected by the engine.  The function then
-decides what action to take depending on the event.
-]]
-function AtlasLoot_OnEvent(self, event, arg1)
-	if arg1 == "AtlasLoot" then
-		AtlasLoot_OnVariablesLoaded()
+--Enable the use of /al or /atlasloot to open the loot browser
+SLASH_ATLASLOOT1 = "/atlasloot"
+SLASH_ATLASLOOT2 = "/al"
+
+SlashCmdList["ATLASLOOT"] = function(msg)
+	if msg == AL["reset"] then
+		AtlasLoot_Reset("frames")
+	elseif msg == AL["options"] then
+		AtlasLootOptions_Toggle()
+	else
+		AtlasLootDefaultFrame:Show()
 	end
 end
 
 --[[
-AtlasLoot_ShowMenu:
-Legacy function used in Cosmos integration to open the loot browser
+AtlasLootItemsFrame_OnLoad:
+Performs inital setup of the mod and registers it for further setup when
+the required resources are in place
 ]]
-function AtlasLoot_ShowMenu()
-	AtlasLootDefaultFrame:Show()
+function AtlasLootItemsFrame_OnLoad(self)
+	self:RegisterEvent("ADDON_LOADED")
+	self:RegisterForDrag("LeftButton")
+	self.time = nil
+	self.queue = {}
+	self.refreshCount = 0
+	AtlasLootItemsFrame_CloseButton:HookScript("OnClick", AtlasLootItemsFrame_OnCloseButton)
 end
 
 --[[
-AtlasLoot_OnVariablesLoaded:
-Invoked by the ADDON_LOADED event.  Now that we are sure all the assets
-the addon needs are in place, we can properly set up the mod
+AtlasLootItemsFrame_OnEvent(event):
+event - Name of the event, passed from the API
+Invoked whenever a relevant event is detected by the engine.  The function then
+decides what action to take depending on the event.
 ]]
-function AtlasLoot_OnVariablesLoaded()
+function AtlasLootItemsFrame_OnEvent(self, event, arg1)
+	if arg1 ~= "AtlasLoot" then return end
+
+	self:UnregisterEvent("ADDON_LOADED")
+
 	local AtlasCheck = false
 	AtlasLoot.db = LibStub("AceDB-3.0"):New("AtlasLootDB")
 	AtlasLoot.db:RegisterDefaults(AtlasLootDBDefaults)
@@ -214,8 +222,6 @@ function AtlasLoot_OnVariablesLoaded()
 	if AtlasCheck == false then
 		AtlasLoot.db.profile.AtlasType = "Unknown"
 	end
-	--Add the loot browser to the special frames tables to enable closing wih the ESC key
-	tinsert(UISpecialFrames, "AtlasLootDefaultFrame")
 	--Set up options frame
 	AtlasLootOptions_OnLoad()
 	AtlasLoot_CreateOptionsInfoTooltips()
@@ -224,15 +230,16 @@ function AtlasLoot_OnVariablesLoaded()
 		AtlasButton_LoadAtlas()
 	end
 	--Hook the necessary Atlas functions
-	Hooked_Atlas_Refresh = Atlas_Refresh
+	AtlasLoot.hooks.Atlas_Refresh = Atlas_Refresh
+	AtlasLoot.hooks.Atlas_OnShow = Atlas_OnShow
+	AtlasLoot.hooks.AtlasScrollBar_Update = AtlasScrollBar_Update
+	AtlasLoot.hooks.Atlas_ToggleLock = Atlas_ToggleLock
 	Atlas_Refresh = AtlasLoot_Refresh
-	Hooked_Atlas_OnShow = Atlas_OnShow
 	Atlas_OnShow = AtlasLoot_Atlas_OnShow
+	AtlasScrollBar_Update = AtlasLoot_AtlasScrollBar_Update
+	Atlas_ToggleLock = AtlasLoot_Atlas_ToggleLock
 	-- Replace search wrapper function
 	Atlas_Search = AtlasLoot_Atlas_Search
-	--Instead of hooking, replace the scrollbar driver function
-	Hooked_AtlasScrollBar_Update = AtlasScrollBar_Update
-	AtlasScrollBar_Update = AtlasLoot_AtlasScrollBar_Update
 	if not AtlasLoot.db.profile.LootBrowserStyle then
 		AtlasLoot.db.profile.LootBrowserStyle = 1
 	end
@@ -256,12 +263,12 @@ function AtlasLoot_OnVariablesLoaded()
 	end
 	--If using an opaque items frame, change the alpha value of the backing texture
 	if AtlasLoot.db.profile.Opaque then
-		AtlasLootItemsFrame_Back:SetTexture(0, 0, 0, 1)
+		AtlasLootItemsFrame_Background:SetTexture(0, 0, 0, 1)
 	else
-		AtlasLootItemsFrame_Back:SetTexture(0, 0, 0, 0.65)
+		AtlasLootItemsFrame_Background:SetTexture(0, 0, 0, 0.65)
 	end
 	--If Atlas is installed, set up for Atlas
-	if Hooked_Atlas_Refresh then
+	if AtlasFrame then
 		AtlasLoot_SetupForAtlas()
 		--If a first time user, set up options
 		if AtlasLoot.db.profile.AtlasLootVersion == nil or tonumber(AtlasLoot.db.profile.AtlasLootVersion) < 40500 then
@@ -278,10 +285,7 @@ function AtlasLoot_OnVariablesLoaded()
 		if AtlasLoot.db.profile.AtlasType == "Preview" then
 			AtlasLootBossButtons = AtlasLootNewBossButtons
 		end
-		Hooked_Atlas_Refresh()
-	else
-		--If we are not using Atlas, keep the items frame out of the way
-		AtlasLootItemsFrame:Hide()
+		AtlasLoot.hooks.Atlas_Refresh()
 	end
 	--Check and migrate old WishList entry format to the newer one
 	if (AtlasLootCharDB.AtlasLootVersion == nil or tonumber(AtlasLootCharDB.AtlasLootVersion) < 100001) and AtlasLootCharDB and AtlasLootCharDB["WishList"] and #AtlasLootCharDB["WishList"] ~= 0 then
@@ -377,6 +381,62 @@ function AtlasLoot_OnVariablesLoaded()
 	AtlasLoot.db.profile.HeroicMode = false
 
 	AtlasLoot_SetupFilterButton()
+
+	AtlasLootDefaultFrame_Notice:SetText(AL["This is a loot browser only.  To view maps as well, install either Atlas or Alphamap."])
+    AtlasLootDefaultFrame_LoadModules:SetText(AL["Load Modules"])
+    AtlasLootDefaultFrame_Options:SetText(AL["Options"])
+    AtlasLootDefaultFrame_Menu:SetText(AL["Select Loot Table"])
+    AtlasLootDefaultFrame_SubMenu:SetText(AL["Select Sub-Table"])
+    AtlasLootDefaultFrameSearchButton:SetText(AL["Search"])
+    AtlasLootDefaultFrameSearchClearButton:SetText(AL["Clear"])
+    AtlasLootDefaultFrameLastResultButton:SetText(AL["Last Result"])
+    AtlasLootDefaultFrameWishListButton:SetText(AL["Wishlist"])
+	AtlasLootInfoHidePanel:SetText(AL["Toggle AL Panel"])
+	AtlasLootInfoHidePanel:SetWidth(AtlasLootInfoHidePanel:GetTextWidth() + 20)
+	AtlasLootInfo_Text2:SetText(AL["Click boss name to view loot."])
+	AtlasLoot_QuickLooks:SetText(AL["Add to QuickLooks:"])
+	AtlasLootItemsFrame_BACK:SetText(AL["Back"])
+	AtlasLootItemsFrame_HeroicText:SetText(AL["Heroic Mode"])
+	AtlasLootFilterCheckText:SetText(AL["Filter"])
+	AtlasLootHelpFrame_Title:SetText(AL["AtlasLoot Help"])
+	AtlasLootOptionsFrameDefaultTTText:SetText(AL["Default Tooltips"])
+	AtlasLootOptionsFrameLootlinkTTText:SetText(AL["Lootlink Tooltips"])
+	AtlasLootOptionsFrameItemSyncTTText:SetText(AL["ItemSync Tooltips"])
+	AtlasLootOptionsFrameOpaqueText:SetText(AL["Make Loot Table Opaque"])
+	AtlasLootOptionsFrameItemIDText:SetText(AL["Show itemIDs at all times"])
+	AtlasLootOptionsFrameLoDStartupText:SetText(AL["Load Loot Modules at Startup"])
+	AtlasLootOptionsFrameSafeLinksText:SetText(AL["Safe Chat Links"])
+	AtlasLootOptionsFrameEquipCompareText:SetText(AL["Show Comparison Tooltips"])
+	AtlasLootOptionsFrameItemSpamText:SetText(AL["Suppress Item Query Text"])
+	AtlasLootOptionsFrameHidePanelText:SetText(AL["Hide AtlasLoot Panel"])
+	AtlasLootOptionsFrame_ResetWishlist:SetText(AL["Reset Wishlist"])
+	AtlasLootOptionsFrame_ResetWishlist:SetWidth(AtlasLootOptionsFrame_ResetWishlist:GetTextWidth() + 20)
+	AtlasLootOptionsFrame_ResetAtlasLoot:SetText(AL["Reset Frames"])
+	AtlasLootOptionsFrame_ResetAtlasLoot:SetWidth(AtlasLootOptionsFrame_ResetAtlasLoot:GetTextWidth() + 20)
+	AtlasLootOptionsFrame_ResetQuicklooks:SetText(AL["Reset Quicklooks"])
+	AtlasLootOptionsFrame_ResetQuicklooks:SetWidth(AtlasLootOptionsFrame_ResetQuicklooks:GetTextWidth() + 20)
+	AtlasLootOptionsFrame_FuBarShow:SetText(AL["Show FuBar Plugin"])
+	AtlasLootOptionsFrame_FuBarHide:SetText(AL["Hide FuBar Plugin"])
+	AtlasLootOptionsFrame_FuBarNotice:SetText(AL["The Minimap Button is generated by the FuBar Plugin."].."\n"..AL["This is automatic, you do not need FuBar installed."])
+	AtlasLootPanel_WorldEvents:SetText(AL["World Events"])
+	AtlasLootPanel_Sets:SetText(AL["Collections"])
+	AtlasLootPanel_Reputation:SetText(AL["Factions"])
+	AtlasLootPanel_PvP:SetText(AL["PvP Rewards"])
+	AtlasLootPanel_Crafting:SetText(AL["Crafting"])
+	AtlasLootPanel_WishList:SetText(AL["Wishlist"])
+	AtlasLootPanel_Options:SetText(AL["Options"])
+	AtlasLootPanel_LoadModules:SetText(AL["Load Modules"])
+	AtlasLootSearchButton:SetText(AL["Search"])
+	AtlasLootSearchClearButton:SetText(AL["Clear"])
+	AtlasLootLastResultButton:SetText(AL["Last Result"])
+end
+
+--[[
+AtlasLoot_ShowMenu:
+Legacy function used in Cosmos integration to open the loot browser
+]]
+function AtlasLoot_ShowMenu()
+	AtlasLootDefaultFrame:Show()
 end
 
 function AtlasLoot_Reset(data)
@@ -425,21 +485,6 @@ function AtlasLoot_Reset(data)
 end
 
 --[[
-AtlasLoot_SlashCommand(msg):
-msg - takes the argument for the /atlasloot command so that the appropriate action can be performed
-If someone types /atlasloot, bring up the options box
-]]
-function AtlasLoot_SlashCommand(msg)
-	if msg == AL["reset"] then
-		AtlasLoot_Reset("frames")
-	elseif msg == AL["options"] then
-		AtlasLootOptions_Toggle()
-	else
-		AtlasLootDefaultFrame:Show()
-	end
-end
-
---[[
 AtlasLootOptions_Toggle:
 Toggle on/off the options window
 ]]
@@ -457,26 +502,6 @@ function AtlasLootOptions_Toggle()
 	elseif AtlasLoot.db.profile.ItemSyncTT == true then
 		AtlasLootOptions_ItemSyncTTToggle()
 	end
-end
-
---[[
-AtlasLoot_OnLoad:
-Performs inital setup of the mod and registers it for further setup when
-the required resources are in place
-]]
-function AtlasLoot_OnLoad(self)
-	self:RegisterEvent("ADDON_LOADED")
-	--Enable the use of /al or /atlasloot to open the loot browser
-	SLASH_ATLASLOOT1 = "/atlasloot"
-	SLASH_ATLASLOOT2 = "/al"
-	SlashCmdList["ATLASLOOT"] = function(msg)
-		AtlasLoot_SlashCommand(msg)
-	end
-	AtlasLootItemsFrame_BACK:SetText(AL["Back"])
-	AtlasLoot_QuickLooks:SetText(AL["Add to QuickLooks:"])
-	self.time = nil
-	self.queue = {}
-	self.refreshCount = 0
 end
 
 --[[
@@ -867,6 +892,11 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 	AtlasLootItemsFrame:ClearAllPoints()
 	AtlasLootItemsFrame:SetPoint(AtlasLoot.AnchorPoint[1], AtlasLoot.AnchorPoint[2], AtlasLoot.AnchorPoint[3], AtlasLoot.AnchorPoint[4], AtlasLoot.AnchorPoint[5])
 	AtlasLootItemsFrame:Show()
+
+	if AtlasFrame and AtlasFrame:IsShown() then
+		AtlasLootItemsFrame.activeLootPage = AtlasLoot.db.profile.LastBoss
+		AtlasLoot_AtlasScrollBar_Update()
+	end
 end
 
 --[[
@@ -997,6 +1027,11 @@ function AtlasLoot_GenerateAtlasMenu(dataID)
 	AtlasLootItemsFrame:ClearAllPoints()
 	AtlasLootItemsFrame:SetPoint(AtlasLoot.AnchorPoint[1], AtlasLoot.AnchorPoint[2], AtlasLoot.AnchorPoint[3], AtlasLoot.AnchorPoint[4], AtlasLoot.AnchorPoint[5])
 	AtlasLootItemsFrame:Show()
+
+	if AtlasFrame and AtlasFrame:IsShown() then
+		AtlasLootItemsFrame.activeLootPage = AtlasLoot.db.profile.LastBoss
+		AtlasLoot_AtlasScrollBar_Update()
+	end
 end
 
 --[[

@@ -24,6 +24,13 @@ AtlasLoot_Data["AtlasLootFallback"] = {
     EmptyInstance = {},
 }
 
+function AtlasLootDefaultFrame_OnLoad(self)
+    self:SetBackdropColor(0.75, 0, 0.75)
+    self:RegisterForDrag("LeftButton")
+    --Add the loot browser to the special frames tables to enable closing wih the ESC key
+	tinsert(UISpecialFrames, "AtlasLootDefaultFrame")
+end
+
 --[[
 AtlasLoot_DewDropClick(tablename, text, tabletype):
 tablename - Name of the loot table in the database

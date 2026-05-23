@@ -6,7 +6,6 @@
 	<Script file="Options.lua"/>
 	<Script file="LootButtons.lua"/>
 	<Script file="HooksandAPI.lua"/>
-	<Script file="AtlasIntegration.lua"/>
 	<Script file="Launchers.lua"/>
 	<Script file="AtlasLoot.lua"/>
 	<Script file="WishList.lua"/>
@@ -54,12 +53,9 @@
 			<OnUpdate function="GameTooltip_OnUpdate"/>
 		</Scripts>
 	</GameTooltip>
-
-	<Button name="AtlasLootPanelButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
-		<Size x="120" y="20"/>
-	</Button>
 	
-	<Button name="AtlasLootQuickLookButtonTemplate" inherits="AtlasLootPanelButtonTemplate" virtual="true">
+	<Button name="AtlasLootQuickLookButtonTemplate" inherits="UIPanelButtonTemplate" virtual="true">
+		<Size x="120" y="20"/>
 		<Scripts>
 			<OnEnter function="AtlasLootQuickLookButton_OnEnter"/>
 			<OnLeave function="GameTooltip_Hide"/>
@@ -118,47 +114,33 @@
 			<OnEnter function="AtlasLootItem_OnEnter"/>
 			<OnLeave function="AtlasLootItem_OnLeave"/>
 			<OnClick function="AtlasLootItem_OnClick"/>
-			<OnShow function="RaiseFrameLevel"/>
 		</Scripts>
 	</Button>
 
 	<Button name="AtlasLootMenuItem_Template" inherits="AtlasLootItem_ParentTemplate" virtual="true" registerForClicks="LeftButtonDown, RightButtonDown">
 		<Scripts>
 			<OnClick function="AtlasLootMenuItem_OnClick"/>
-			<OnShow function="RaiseFrameLevel"/>
 		</Scripts>
 	</Button>
 
 	<Frame name="AtlasLootInfo">
 		<Size x="128" y="75"/>
 		<Frames>
-			<Button name="$parentHidePanel" inherits="OptionsButtonTemplate">
+			<Button name="$parentHidePanel" inherits="UIPanelButtonTemplate">
 				<Size x="140" y="20"/>
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" x="-5" y="-3"/>
 				</Anchors>
 				<Scripts>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-						self:SetText(AL["Toggle AL Panel"])
-						self:SetWidth(self:GetTextWidth() + 20)
-						AtlasLootInfo_Text2:SetText(AL["Click boss name to view loot."])
-					</OnShow>
 					<OnClick>
-						if AtlasLoot.db.profile.HidePanel then
-							AtlasLoot.db.profile.HidePanel = false
-							if AtlasFrame and AtlasFrame:IsVisible() then
-								AtlasLootPanel:Show()
-							end
-						else
+						if AtlasLootPanel:IsShown() then
+							AtlasLootPanel:Hide()
 							AtlasLoot.db.profile.HidePanel = true
-							if AtlasFrame and AtlasFrame:IsVisible() then
-								AtlasLootPanel:Hide()
-							end
+						else
+							AtlasLootPanel:Show()
+							AtlasLoot.db.profile.HidePanel = false
 						end
 						AtlasLootOptionsFrameHidePanel:SetChecked(AtlasLoot.db.profile.HidePanel)
-						AtlasLoot_SetupForAtlas()
 					</OnClick>
 				</Scripts>
 			</Button>
@@ -208,14 +190,6 @@
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-5" y="-5"/>
 				</Anchors>
-				<Scripts>
-					<OnClick>
-						AtlasLootItemsFrame_OnCloseButton()
-					</OnClick>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
-				</Scripts>
 			</Button>
 			<Button name="AtlasLootItem_1" inherits="AtlasLootItem_Template" id="1">
 				<Anchors>
@@ -523,9 +497,6 @@
 					<Anchor point="BOTTOM" x="-125" y="4"/>
 				</Anchors>
 				<Scripts>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 					<OnClick>
 						AtlasLoot_10Man25ManToggle()
 					</OnClick>
@@ -536,13 +507,6 @@
 					<Anchor point="BOTTOM" x="-185" y="27"/>
 				</Anchors>
 				<Scripts>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Heroic Mode"])
-					</OnLoad>
 					<OnClick>
 						AtlasLoot_HeroicModeToggle()
 					</OnClick>
@@ -553,12 +517,7 @@
 					<Anchor point="BOTTOM" x="0" y="4"/>
 				</Anchors>
 				<Scripts>
-					<OnClick>
-						AtlasLoot_NavButton_OnClick(self)
-					</OnClick>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
+					<OnClick function="AtlasLoot_NavButton_OnClick"/>
 				</Scripts>
 			</Button>
 			<Button name="$parent_NEXT">
@@ -571,12 +530,7 @@
 				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 				<Scripts>
-					<OnClick>
-						AtlasLoot_NavButton_OnClick(self)
-					</OnClick>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
+					<OnClick function="AtlasLoot_NavButton_OnClick"/>
 				</Scripts>
 			</Button>
 			<Button name="AtlasLootQuickLooksButton">
@@ -589,12 +543,7 @@
 				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 				<Scripts>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
-					<OnClick>
-						AtlasLoot_ShowQuickLooks(self)
-					</OnClick>
+					<OnClick function="AtlasLoot_ShowQuickLooks"/>
 				</Scripts>
 			</Button>
 			<CheckButton name="AtlasLootFilterCheck" inherits="OptionsCheckButtonTemplate" hidden="true">
@@ -602,25 +551,15 @@
 					<Anchor point="BOTTOM" x="85" y="27"/>
 				</Anchors>
 				<Scripts>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Filter"])
-					</OnLoad>
 					<OnEnter>
 						local BabbleEpoch = AtlasLoot_GetLocaleLibBabble("LibBabble-Epoch-3.0")
-						GameTooltip:ClearLines()
 						GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
 						GameTooltip:AddLine("|cffff0000"..BabbleEpoch["Filter Items"])
 						GameTooltip:AddLine(BabbleEpoch["Hides any items on this page\nwhich are excluded by your\nfilter options."])
 						GameTooltip:AddLine("|cff4488FF"..BabbleEpoch["Right click"]..": ".."|cffFFD100"..BabbleEpoch["Open filter options."])
 						GameTooltip:Show()
 					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
+					<OnLeave function="GameTooltip_Hide"/>
 				</Scripts>
 			</CheckButton>
 			<Button name="$parent_PREV">
@@ -633,18 +572,13 @@
 				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-PrevPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 				<Scripts>
-					<OnClick>
-						AtlasLoot_NavButton_OnClick(self)
-					</OnClick>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
+					<OnClick function="AtlasLoot_NavButton_OnClick"/>
 				</Scripts>
 			</Button>
 		</Frames>
 		<Layers>
 			<Layer level="BACKGROUND">
-				<Texture name="$parent_Back">
+				<Texture name="$parent_Background">
 					<Anchors>
 						<Anchor point="TOPLEFT"/>
 						<Anchor point="BOTTOMRIGHT"/>
@@ -668,14 +602,9 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnShow>
-				self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-			</OnShow>
-			<OnLoad>
-				AtlasLoot_OnLoad(self)
-			</OnLoad>
+			<OnLoad function="AtlasLootItemsFrame_OnLoad"/>
 			<OnUpdate function="AtlasLootItemsFrame_OnUpdate"/>
-			<OnEvent function="AtlasLoot_OnEvent"/>
+			<OnEvent function="AtlasLootItemsFrame_OnEvent"/>
 			<OnMouseWheel>
 				if delta > 0 then
 					if AtlasLootItemsFrame_NEXT:IsShown() then
@@ -687,9 +616,18 @@
 					end
 				end
 			</OnMouseWheel>
-			<OnMouseUp>
+			<OnDragStart>
+				local parent = self:GetParent()
+				if parent:IsMovable() then
+					parent:StartMoving()
+				end
+			</OnDragStart>
+			<OnDragStop>
+				self:GetParent():StopMovingOrSizing()
+			</OnDragStop>
+			<OnMouseDown>
 				CloseDropDownMenus()
-			</OnMouseUp>
+			</OnMouseDown>
 		</Scripts>
 	</Frame>
 
@@ -709,13 +647,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>
-				local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-				AtlasLootHelpFrame_Title:SetText(AL["AtlasLoot Help"])
-			</OnLoad>
-			<OnShow>
-				AtlasLoot_DisplayHelp()
-			</OnShow>
+			<OnShow function="AtlasLoot_CreateHelpFrame"/>
 		</Scripts>
 	</Frame>
 
@@ -730,13 +662,7 @@
 					<Anchor point="TOPLEFT" x="5" y="-40"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Default Tooltips"])
-					</OnLoad>
-					<OnClick>
-						AtlasLootOptions_DefaultTTToggle()
-					</OnClick>
+					<OnClick function="AtlasLootOptions_DefaultTTToggle"/>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentLootlinkTT" inherits="OptionsCheckButtonTemplate">
@@ -744,13 +670,7 @@
 					<Anchor point="TOPLEFT" x="5" y="-70"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Lootlink Tooltips"])
-					</OnLoad>
-					<OnClick>
-						AtlasLootOptions_LootlinkTTToggle()
-					</OnClick>
+					<OnClick function="AtlasLootOptions_LootlinkTTToggle"/>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentItemSyncTT" inherits="OptionsCheckButtonTemplate">
@@ -758,13 +678,7 @@
 					<Anchor point="TOPLEFT" x="5" y="-100"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["ItemSync Tooltips"])
-					</OnLoad>
-					<OnClick>
-						AtlasLootOptions_ItemSyncTTToggle()
-					</OnClick>
+					<OnClick function="AtlasLootOptions_ItemSyncTTToggle"/>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentOpaque" inherits="OptionsCheckButtonTemplate">
@@ -772,13 +686,7 @@
 					<Anchor point="TOPLEFT" x="5" y="-130"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Make Loot Table Opaque"])
-					</OnLoad>
-					<OnClick>
-						AtlasLootOptions_OpaqueToggle()
-					</OnClick>
+					<OnClick function="AtlasLootOptions_OpaqueToggle"/>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentItemID" inherits="OptionsCheckButtonTemplate">
@@ -786,13 +694,7 @@
 					<Anchor point="TOPLEFT" x="5" y="-160"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Show itemIDs at all times"])
-					</OnLoad>
-					<OnClick>
-						AtlasLootOptions_ItemIDToggle()
-					</OnClick>
+					<OnClick function="AtlasLootOptions_ItemIDToggle"/>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentLoDStartup" inherits="OptionsCheckButtonTemplate">
@@ -800,13 +702,7 @@
 					<Anchor point="TOP" x="5" y="-40"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Load Loot Modules at Startup"])
-					</OnLoad>
-					<OnClick>
-						AtlasLootOptions_LoDStartup()
-					</OnClick>
+					<OnClick function="AtlasLootOptions_LoDStartup"/>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentSafeLinks" inherits="OptionsCheckButtonTemplate" enable="false">
@@ -814,13 +710,7 @@
 					<Anchor point="TOP" x="5" y="-70"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Safe Chat Links"])
-					</OnLoad>
-					<OnClick>
-						AtlasLootOptions_SafeLinksToggle()
-					</OnClick>
+					<OnClick function="AtlasLootOptions_SafeLinksToggle"/>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentEquipCompare" inherits="OptionsCheckButtonTemplate">
@@ -828,10 +718,6 @@
 					<Anchor point="TOP" x="5" y="-100"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Show Comparison Tooltips"])
-					</OnLoad>
 					<OnClick>
 						if AtlasLoot.db.profile.EquipCompare then
 							AtlasLoot.db.profile.EquipCompare = false
@@ -852,13 +738,7 @@
 					<Anchor point="TOP" x="5" y="-130"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Suppress Item Query Text"])
-					</OnLoad>
-					<OnClick>
-						AtlasLootOptions_ItemSpam()
-					</OnClick>
+					<OnClick function="AtlasLootOptions_ItemSpam"/>
 				</Scripts>
 			</CheckButton>
 			<CheckButton name="$parentHidePanel" inherits="OptionsCheckButtonTemplate">
@@ -866,27 +746,7 @@
 					<Anchor point="TOP" x="5" y="-160"/>
 				</Anchors>
 				<Scripts>
-					<OnLoad>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						_G[self:GetName().."Text"]:SetText(AL["Hide AtlasLoot Panel"])
-					</OnLoad>
-					<OnClick>
-						if AtlasLoot.db.profile.HidePanel then
-							AtlasLoot.db.profile.HidePanel = false
-							if AtlasFrame then
-								if AtlasFrame:IsVisible() then
-									AtlasLootPanel:Show()
-								end
-							end
-						else
-							AtlasLoot.db.profile.HidePanel = true
-							if AtlasFrame then
-								if AtlasFrame:IsVisible() then
-									AtlasLootPanel:Hide()
-								end
-							end
-						end
-					</OnClick>
+					<OnClick function="AtlasLootOptions_HidePanel"/>
 				</Scripts>
 			</CheckButton>
 			<Button name="AtlasLoot_SelectLootBrowserStyle" inherits="UIDropDownMenuTemplate">
@@ -917,7 +777,7 @@
 					<Anchor point="TOP" x="30" y="-230"/>
 				</Anchors>
 			</Button>
-			<Slider name="$ParentLootBrowserScale" inherits="OptionsSliderTemplate">
+			<Slider name="$parentLootBrowserScale" inherits="OptionsSliderTemplate">
 				<Size x="240" y="16"/>
 				<Anchors>
 					<Anchor point="TOP" x="0" y="-285" />
@@ -933,7 +793,7 @@
 					</OnValueChanged>
 				</Scripts>
 			</Slider>
-			<Button name="$parent_ResetWishlist" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_ResetWishlist" inherits="UIPanelButtonTemplate">
 				<Size x="130" y="25"/>
 				<Anchors>
 					<Anchor point="TOP" x="0" y="-325"/>
@@ -942,14 +802,9 @@
 					<OnClick>
 						AtlasLoot_Reset("wishlist")
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Reset Wishlist"])
-						self:SetWidth(AtlasLootOptionsFrame_ResetWishlist:GetTextWidth() + 20)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_ResetAtlasLoot" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_ResetAtlasLoot" inherits="UIPanelButtonTemplate">
 				<Size x="130" y="25"/>
 				<Anchors>
 					<Anchor point="RIGHT" relativeTo="AtlasLootOptionsFrame_ResetWishlist" relativePoint="LEFT" x="-10" y="0"/>
@@ -958,14 +813,9 @@
 					<OnClick>
 						AtlasLoot_Reset("frames")
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Reset Frames"])
-						self:SetWidth(AtlasLootOptionsFrame_ResetAtlasLoot:GetTextWidth() + 20)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_ResetQuicklooks" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_ResetQuicklooks" inherits="UIPanelButtonTemplate">
 				<Size x="130" y="25"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="AtlasLootOptionsFrame_ResetWishlist" relativePoint="RIGHT" x="10" y="0"/>
@@ -974,14 +824,9 @@
 					<OnClick>
 						AtlasLoot_Reset("quicklooks")
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Reset Quicklooks"])
-						self:SetWidth(AtlasLootOptionsFrame_ResetQuicklooks:GetTextWidth() + 20)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_FuBarShow" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_FuBarShow" inherits="UIPanelButtonTemplate">
 				<Size x="150" y="25"/>
 				<Anchors>
 					<Anchor point="TOP" x="-85" y="-390"/>
@@ -992,14 +837,9 @@
 							AtlasLootFu:Show()
 						end
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Show FuBar Plugin"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_FuBarHide" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_FuBarHide" inherits="UIPanelButtonTemplate">
 				<Size x="150" y="25"/>
 				<Anchors>
 					<Anchor point="TOP" x="85" y="-390"/>
@@ -1010,11 +850,6 @@
 							AtlasLootFu:Hide()
 						end
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Hide FuBar Plugin"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 				</Scripts>
 			</Button>
 		</Frames>
@@ -1034,13 +869,7 @@
 			</Layer>
 		</Layers>
 		<Scripts>
-			<OnLoad>
-				local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-				AtlasLootOptionsFrame_FuBarNotice:SetText(AL["The Minimap Button is generated by the FuBar Plugin."].."\n"..AL["This is automatic, you do not need FuBar installed."])
-			</OnLoad>
-			<OnShow>
-				AtlasLoot_OptionsOnShow()
-			</OnShow>
+			<OnShow function="AtlasLoot_OptionsOnShow"/>
 		</Scripts>
 	</Frame>
 
@@ -1067,7 +896,8 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Button name="$parent_WorldEvents" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_WorldEvents" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" x="15" y="29"/>
 				</Anchors>
@@ -1075,14 +905,10 @@
 					<OnClick>
 						AtlasLoot_GenerateAtlasMenu("WORLDEVENTMENU")
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["World Events"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_Sets" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_Sets" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parent_WorldEvents" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
@@ -1090,14 +916,10 @@
 					<OnClick>
 						AtlasLoot_GenerateAtlasMenu("SETMENU")
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Collections"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_Reputation" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_Reputation" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parent_Sets" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
@@ -1105,14 +927,10 @@
 					<OnClick>
 						AtlasLoot_GenerateAtlasMenu("REPMENU")
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Factions"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_PvP" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_PvP" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parent_Reputation" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
@@ -1120,14 +938,10 @@
 					<OnClick>
 						AtlasLoot_GenerateAtlasMenu("PVPMENU")
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["PvP Rewards"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_Crafting" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_Crafting" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parent_PvP" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
@@ -1135,56 +949,33 @@
 					<OnClick>
 						AtlasLoot_GenerateAtlasMenu("CRAFTINGMENU")
 					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Crafting"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 				</Scripts>
 			</Button>
-			<Button name="$parent_WishList" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_WishList" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="$parent_Crafting" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
 				<Scripts>
-					<OnClick>
-						AtlasLoot_ShowWishListDropDown("", "", "", "", "", self, true)
-					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Wishlist"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
+					<OnClick function="AtlasLootWishListButton_OnClick"/>
 				</Scripts>
 			</Button>
-			<Button name="$parent_Options" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_Options" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parent_WorldEvents" relativePoint="BOTTOM" x="0" y="-2"/>
 				</Anchors>
 				<Scripts>
-					<OnClick>
-						AtlasLootOptions_Toggle()
-					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Options"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
+					<OnClick function="AtlasLootOptions_Toggle"/>
 				</Scripts>
 			</Button>
-			<Button name="$parent_LoadModules" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="$parent_LoadModules" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="TOP" relativeTo="$parent_Sets" relativePoint="BOTTOM" x="0" y="-2"/>
 				</Anchors>
 				<Scripts>
-					<OnClick>
-						AtlasLoot_LoadAllModules()
-					</OnClick>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Load Modules"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
+					<OnClick function="AtlasLoot_LoadAllModules"/>
 				</Scripts>
 			</Button>
 			<Button name="$parent_Preset1" inherits="AtlasLootQuickLookButtonTemplate" id="1">
@@ -1207,19 +998,13 @@
 					<Anchor point="TOP" relativeTo="$parent_WishList" relativePoint="BOTTOM" x="0" y="-2"/>
 				</Anchors>
 			</Button>
-
-			<EditBox name="AtlasLootSearchBox" inherits="InputBoxTemplate" letters="100">
-				<Size>
-					<AbsDimension x="240" y="35"></AbsDimension>
-				</Size>
+			<EditBox name="AtlasLootSearchBox" inherits="InputBoxTemplate" letters="100" autoFocus="false">
+				<Size x="240" y="35"/>
 				<Anchors>
 					<Anchor point="BOTTOM" x="-123" y="20"/>
 				</Anchors>
+				<TextInsets left="0" right="8" top="0" bottom="0"/>
 				<Scripts>
-					<OnLoad>
-						self:SetAutoFocus(false)
-						self:SetTextInsets(0, 8, 0, 0)
-					</OnLoad>
 					<OnTextChanged>
 						AtlasLoot:RefreshSearchSuggestions(self)
 					</OnTextChanged>
@@ -1241,19 +1026,13 @@
 						AtlasLoot:HideSearchSuggestions(self)
 					</OnEnterPressed>
 				</Scripts>
-				<FontString name="AtlasLootSearchString" inherits="GameFontNormal"></FontString>
 			</EditBox>
-			<Button name="AtlasLootSearchButton" inherits="UIPanelButtonTemplate2" parent="AtlasLootSearchBox">
-				<Size x="69" y="32"/>
+			<Button name="AtlasLootSearchButton" inherits="UIPanelButtonTemplate" parent="AtlasLootSearchBox">
+				<Size x="69" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
 				<Scripts>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Search"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 					<OnClick>
 						AtlasLoot:Search(AtlasLootSearchBox:GetText())
 						AtlasLootSearchBox:ClearFocus()
@@ -1271,41 +1050,29 @@
 				<DisabledTexture file="Interface\Buttons\UI-SpellbookIcon-NextPage-Disabled"/>
 				<HighlightTexture file="Interface\Buttons\UI-Common-MouseHilight" alphaMode="ADD"/>
 				<Scripts>
-					<OnShow>
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 					<OnClick>
 						AtlasLoot:ShowSearchOptions(self)
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="AtlasLootSearchClearButton" inherits="UIPanelButtonTemplate2" parent="AtlasLootSearchBox">
-				<Size x="58" y="32"/>
+			<Button name="AtlasLootSearchClearButton" inherits="UIPanelButtonTemplate" parent="AtlasLootSearchBox">
+				<Size x="58" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="AtlasLootSearchOptionsButton" relativePoint="RIGHT" x="-2" y="0"/>
 				</Anchors>
 				<Scripts>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Clear"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 					<OnClick>
 						AtlasLootSearchBox:SetText("")
 						AtlasLootSearchBox:ClearFocus()
 					</OnClick>
 				</Scripts>
 			</Button>
-			<Button name="AtlasLootLastResultButton" inherits="AtlasLootPanelButtonTemplate">
+			<Button name="AtlasLootLastResultButton" inherits="UIPanelButtonTemplate">
+				<Size x="120" y="20"/>
 				<Anchors>
 					<Anchor point="LEFT" relativeTo="AtlasLootSearchClearButton" relativePoint="RIGHT" x="0" y="0"/>
 				</Anchors>
 				<Scripts>
-					<OnShow>
-						local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-						self:SetText(AL["Last Result"])
-						self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
-					</OnShow>
 					<OnClick>
 						AtlasLoot:ShowSearchResult()
 					</OnClick>

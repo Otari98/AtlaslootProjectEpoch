@@ -213,7 +213,6 @@ function AtlasLootItem_OnClick(self, button)
     if not isSpell then
         local itemName, itemLink = GetItemInfo(itemID)
         if button == "RightButton" then
-            AtlasLootItemsFrame:Hide()
             AtlasLoot_ShowItemsFrame(AtlasLootItemsFrame.refresh[1], AtlasLootItemsFrame.refresh[2], AtlasLootItemsFrame.refresh[3])
         elseif IsShiftKeyDown() then
             ChatEdit_InsertLink(itemLink)
@@ -346,3 +345,6 @@ function AtlasLootQuickLookButton_OnShow(self)
     end
 end
 
+function AtlasLootWishListButton_OnClick(self, button, down)
+    AtlasLoot_ShowWishListDropDown("", "", "", "", "", self, true)
+end

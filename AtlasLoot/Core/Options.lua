@@ -18,7 +18,7 @@ AtlasLootOptions_LoDSpam()
 AtlasLootOptions_LoDStartup()
 AtlasLoot_SetupLootBrowserSlider(frame, mymin, mymax, step)
 AtlasLoot_UpdateLootBrowserSlider(frame)
-AtlasLoot_DisplayHelp()
+AtlasLoot_CreateHelpFrame()
 AtlasLoot_CreateOptionsInfoTooltips()
 ]]
 
@@ -58,11 +58,17 @@ function AtlasLootOptions_OnLoad()
     --Disable checkboxes of missing addons
     if not LootLink_SetTooltip then
         AtlasLootOptionsFrameLootlinkTT:Disable()
-        AtlasLootOptionsFrameLootlinkTTText:SetText(AL["|cff9d9d9dLootlink Tooltips|r"])
+        AtlasLootOptionsFrameLootlinkTTText:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+    else
+        AtlasLootOptionsFrameLootlinkTT:Enable()
+        AtlasLootOptionsFrameLootlinkTTText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
     end
     if not ItemSync then
         AtlasLootOptionsFrameItemSyncTT:Disable()
-        AtlasLootOptionsFrameItemSyncTTText:SetText(AL["|cff9d9d9dItemSync Tooltips|r"])
+        AtlasLootOptionsFrameItemSyncTTText:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+    else
+        AtlasLootOptionsFrameItemSyncTT:Enable()
+        AtlasLootOptionsFrameItemSyncTTText:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
     end
     AtlasLootOptions_Init()
 end
@@ -102,11 +108,25 @@ end
 function AtlasLootOptions_OpaqueToggle()
     AtlasLoot.db.profile.Opaque = AtlasLootOptionsFrameOpaque:GetChecked()
     if AtlasLoot.db.profile.Opaque then
-        AtlasLootItemsFrame_Back:SetTexture(0, 0, 0, 1)
+        AtlasLootItemsFrame_Background:SetTexture(0, 0, 0, 1)
     else
-        AtlasLootItemsFrame_Back:SetTexture(0, 0, 0, 0.65)
+        AtlasLootItemsFrame_Background:SetTexture(0, 0, 0, 0.65)
     end
     AtlasLootOptions_Init()
+end
+
+function AtlasLootOptions_HidePanel()
+    if AtlasLoot.db.profile.HidePanel then
+        AtlasLoot.db.profile.HidePanel = false
+        if AtlasFrame and AtlasFrame:IsVisible() then
+            AtlasLootPanel:Show()
+        end
+    else
+        AtlasLoot.db.profile.HidePanel = true
+        if AtlasFrame and AtlasFrame:IsVisible() then
+            AtlasLootPanel:Hide()
+        end
+    end
 end
 
 function AtlasLootOptions_ItemSpam()
@@ -154,7 +174,7 @@ function AtlasLoot_UpdateLootBrowserScale()
     AtlasLootDefaultFrame:SetScale(AtlasLoot.db.profile.LootBrowserScale)
 end
 
-function AtlasLoot_DisplayHelp()
+function AtlasLoot_CreateHelpFrame()
     if AtlasLootHelpFrame_HelpText then return end
     local framewidht = InterfaceOptionsFramePanelContainer:GetWidth()
     local panel3 = CreateFrame("ScrollFrame", "AtlasLootHelpFrame_HelpTextFrameScroll", AtlasLootHelpFrame, "UIPanelScrollFrameTemplate")

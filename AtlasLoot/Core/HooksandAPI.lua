@@ -2,20 +2,68 @@
 File containing all the Atlas replacement functions and the External API
 ]]
 
-local AL = LibStub("AceLocale-3.0"):GetLocale("AtlasLoot")
-
--- Colours stored for code readability
-local GREY = "|cff999999"
-local RED = "|cffff0000"
-local WHITE = "|cffFFFFFF"
-local GREEN = "|cff1eff00"
-local PURPLE = "|cff9F3FFF"
-local BLUE = "|cff0070dd"
-local ORANGE = "|cffFF8400"
-
 --Establish number of boss lines in the Atlas frame for scrolling
-local ATLAS_LOOT_BOSS_LINES = 24
-BOSS_SCROLL_LIST = {}
+local BOSS_SCROLL_LIST = {}
+
+--[[
+AtlasLoot_SetupForAtlas:
+This function sets up the Atlas specific XML objects
+]]
+function AtlasLoot_SetupForAtlas()
+    --Position the frame with the AtlasLoot version details in the Atlas frame
+    AtlasLootInfo:ClearAllPoints()
+    AtlasLootInfo:SetParent(AtlasFrame)
+    AtlasLootInfo:SetPoint("TOPLEFT", "AtlasFrame", "TOPLEFT", 546, -3)
+
+    --Anchor the bottom panel to the Atlas frame
+    AtlasLootPanel:ClearAllPoints()
+    AtlasLootPanel:SetParent(AtlasFrame)
+    AtlasLootPanel:SetPoint("TOP", "AtlasFrame", "BOTTOM", 0, 9)
+
+    --Anchor the loot table to the Atlas frame
+    -- AtlasLootItemsFrame:Hide()
+    AtlasLoot.AnchorPoint = AtlasLoot.AnchorAtlas
+end
+
+--[[
+AtlasLootBoss_OnClick:
+Invoked whenever a boss line in Atlas is clicked
+Shows a loot page if one is associated with the button
+]]
+local buttons = { AtlasLootBossButtons, AtlasLootWBBossButtons, AtlasLootBattlegrounds }
+function AtlasLootBoss_OnClick(self)
+    local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone]
+    local id = self.originalIndex
+
+    --If the loot table was already shown and boss clicked again, hide the loot table and fix boss list icons
+    if self.selected then
+        AtlasLootItemsFrame:Hide()
+        AtlasLootItemsFrame.activeLootPage = nil
+        AtlasLoot_AtlasScrollBar_Update()
+    else
+        local lootPage
+        for _, dataSource in ipairs(buttons) do
+            if dataSource[zoneID] and dataSource[zoneID][id] and dataSource[zoneID][id] ~= "" then
+                lootPage = dataSource[zoneID][id]
+                break
+            end
+        end
+        if lootPage then
+            AtlasLootItemsFrame.activeLootPage = lootPage
+            AtlasLoot_ShowBossLoot(lootPage)
+            AtlasLoot_AtlasScrollBar_Update()
+        end
+    end
+
+    --This has been invoked from Atlas, so we remove any claim external mods have on the loot table
+    AtlasLootItemsFrame.externalBoss = nil
+
+    --Hide the AtlasQuest frame if present so that the AtlasLoot items frame is not stuck under it
+    if AtlasQuestInsideFrame then
+        HideUIPanel(AtlasQuestInsideFrame)
+    end
+end
+
 
 --[[
 AtlasLoot_Atlas_OnShow:
@@ -23,14 +71,14 @@ Hooks Atlas_OnShow() to add extra setup routines that AtlasLoot needs for
 integration purposes.
 ]]
 function AtlasLoot_Atlas_OnShow()
-    AtlasLoot_Refresh(true)
+    AtlasLoot_Refresh()
     --We don't want Atlas and the Loot Browser open at the same time, so the Loot Browser is close
     if AtlasLootDefaultFrame:IsShown() then
         AtlasLootDefaultFrame:Hide()
         AtlasLoot_SetupForAtlas()
     end
     --Call the Atlas function
-    Hooked_Atlas_OnShow()
+    AtlasLoot.hooks.Atlas_OnShow()
     --If we were looking at a loot table earlier in the session, it is still
     --saved on the item frame, so restore it in Atlas
     if AtlasLootItemsFrame.activeLootPage ~= nil then
@@ -43,6 +91,9 @@ function AtlasLoot_Atlas_OnShow()
         AtlasLootPanel:Show()
     end
     AtlasLoot_AtlasScrollBar_Update()
+    if AtlasOptions then
+        AtlasFrame:SetMovable(not AtlasOptions.AtlasLocked)
+    end
 end
 
 --[[
@@ -50,16 +101,10 @@ AtlasLoot_Refresh:
 Replacement for Atlas_Refresh, required as the template for the boss buttons in Atlas is insufficient
 Called whenever the state of Atlas changes
 ]]
-function AtlasLoot_Refresh(keepSelection)
+function AtlasLoot_Refresh()
     -- Reset which loot page is 'current'
-    if not keepSelection then
-        AtlasLootItemsFrame.activeBoss = nil
-    end
-    if AtlasLootItemsFrame.activeBoss then
-        AtlasLootItemsFrame:Show()
-    else
-        AtlasLootItemsFrame:Hide()
-    end
+    AtlasLootItemsFrame.activeLootPage = nil
+    AtlasLootItemsFrame:Hide()
 
     local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone]
     if AtlasLoot_ExtraText[zoneID] then
@@ -70,7 +115,7 @@ function AtlasLoot_Refresh(keepSelection)
     end
 
     -- Call original function
-    Hooked_Atlas_Refresh()
+    AtlasLoot.hooks.Atlas_Refresh()
 
     for i = 1, ATLAS_NUM_LINES do
         local entry = _G["AtlasEntry"..i]
@@ -94,7 +139,7 @@ end
 
 function AtlasLoot_Atlas_Search(text)
     local data = nil
-    BOSS_SCROLL_LIST = {}
+    table.wipe(BOSS_SCROLL_LIST)
 
     if ATLAS_SEARCH_METHOD == nil then
         data = ATLAS_DATA
@@ -142,7 +187,7 @@ Required as the Atlas function cannot deal with the AtlasLoot button template or
 ]]
 local buttons = { AtlasLootBossButtons, AtlasLootWBBossButtons, AtlasLootBattlegrounds }
 function AtlasLoot_AtlasScrollBar_Update()
-    Hooked_AtlasScrollBar_Update()
+    AtlasLoot.hooks.AtlasScrollBar_Update()
     local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone]
 
     --Make note of how far in the scroll frame we are
@@ -180,6 +225,11 @@ function AtlasLoot_AtlasScrollBar_Update()
     end
 end
 
+function AtlasLoot_Atlas_ToggleLock()
+    AtlasLoot.hooks.Atlas_ToggleLock()
+    AtlasFrame:SetMovable(not AtlasOptions.AtlasLocked)
+end
+
 --[[
 AtlasLoot_ShowBossLoot(dataID):
 dataID - Name of the loot table
@@ -198,7 +248,6 @@ function AtlasLoot_ShowBossLoot(dataID)
         local dataSource = AtlasLoot_TableNames[dataID][2]
         local title = AtlasLoot_TableNames[dataID][1] or ""
         AtlasLootItemsFrame.externalBoss = dataID
-        AtlasLootItemsFrame:Hide()
         AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
     end
 end

@@ -356,7 +356,6 @@ function AtlasLoot_DeleteFromWishList(itemID)
 		end
 		AtlasLootWishList.Data = AtlasLoot_CategorizeWishList(AtlasLootWishList["Shared"][AtlasLootWishList.arg2][AtlasLootWishList.arg3])
 	end
-	AtlasLootItemsFrame:Hide()
 	AtlasLoot_ShowWishList()
 end
 
@@ -1367,6 +1366,14 @@ function AtlasLoot_CreateWishlistOptions()
 	WishlistOptionsFrame.name = AL["Wishlist"]
 	WishlistOptionsFrame.parent = AL["AtlasLoot"]
 
+	local UpdateTextColor = function(self)
+		if self:IsEnabled() == 0 then
+			_G[self:GetName().."Text"]:SetTextColor(GRAY_FONT_COLOR.r, GRAY_FONT_COLOR.g, GRAY_FONT_COLOR.b)
+		else
+			_G[self:GetName().."Text"]:SetTextColor(NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b)
+		end
+	end
+
 	local WishListMark = CreateFrame("CheckButton", "AtlasLootOptionsWishListMark", WishlistOptionsFrame, "OptionsCheckButtonTemplate")
 	WishListMark:SetPoint("LEFT", WishlistOptionsFrame, "TOPLEFT", 5, -15)
 	WishListMark:SetWidth(25)
@@ -1380,6 +1387,8 @@ function AtlasLoot_CreateWishlistOptions()
 			AtlasLootOptionsWishListMarkOwn:Disable()
 			AtlasLootOptionsWishListMarkAll:Disable()
 		end
+		UpdateTextColor(AtlasLootOptionsWishListMarkOwn)
+		UpdateTextColor(AtlasLootOptionsWishListMarkAll)
 	end)
 	WishListMark:SetScript("OnClick", function()
 		if AtlasLootWishList["Options"][playerName]["Mark"] then
@@ -1391,6 +1400,8 @@ function AtlasLoot_CreateWishlistOptions()
 			AtlasLootOptionsWishListMarkOwn:Enable()
 			AtlasLootOptionsWishListMarkAll:Enable()
 		end
+		UpdateTextColor(AtlasLootOptionsWishListMarkOwn)
+		UpdateTextColor(AtlasLootOptionsWishListMarkAll)
 	end)
 
 	local WishListMarkOwn = CreateFrame("CheckButton", "AtlasLootOptionsWishListMarkOwn", WishlistOptionsFrame, "OptionsCheckButtonTemplate")
@@ -1457,6 +1468,7 @@ function AtlasLoot_CreateWishlistOptions()
 			AtlasLootWishList["Options"][playerName]["AllowShareWishlist"] = true
 			AtlasLootOptionsWishListShareInCombat:Enable()
 		end
+		UpdateTextColor(AtlasLootOptionsWishListShareInCombat)
 	end)
 
 	local WishListShareInCombat = CreateFrame("CheckButton", "AtlasLootOptionsWishListShareInCombat", WishlistOptionsFrame, "OptionsCheckButtonTemplate")
