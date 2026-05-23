@@ -179,7 +179,7 @@ function AtlasLoot_HideNoUsableItems()
 	local count = 0
 	local leatherworking = GetSpellInfo(2108)
 
-	AtlasLoot_Data["FilterList"] = {}
+	table.wipe(AtlasLoot_Data["FilterList"])
 	for i = 1, 30 do
 		if _G["AtlasLootItem_"..i]:IsShown() then
 			local xgo = true
@@ -281,7 +281,9 @@ function AtlasLoot_HideNoUsableItems()
 		AtlasLoot_Data["FilterList"].Back = tablebase.Back
 	end
 
-	AtlasLoot_TableNames["FilterList"] = { AtlasLoot_TableNames[dataID][1], AtlasLoot_TableNames[dataID][2] }
+	if not AtlasLoot_TableNames["FilterList"] then AtlasLoot_TableNames["FilterList"] = {} end
+	AtlasLoot_TableNames["FilterList"][1] = AtlasLoot_TableNames[dataID][1]
+	AtlasLoot_TableNames["FilterList"][2] = AtlasLoot_TableNames[dataID][2]
 	AtlasLoot_ShowItemsFrame("FilterList", "AtlasLootFilter", "")
 end
 

@@ -10,7 +10,6 @@ AtlasLootOptions_Toggle()
 AtlasLootItemsFrame_OnLoad()
 AtlasLootBoss_OnClick()
 AtlasLoot_ShowItemsFrame()
-AtlasLoot_GenerateAtlasMenu(dataID, pFrame)
 AtlasLoot_SetupForAtlas()
 AtlasLoot_SetItemInfoFrame()
 AtlasLootMenuItem_OnClick()
@@ -560,16 +559,16 @@ end
 
 --[[
 AtlasLoot_ShowItemsFrame(dataID, dataSource, title):
-dataID - Name of the loot table
-dataSource - Table in the database where the loot table is stored
+dataID - Key of the AtlasLoot_Data table
+dataSourceString - string representing LOD module
 title - Text string to use as a title for the loot page
 This fuction is not normally called directly, it is usually invoked by AtlasLoot_ShowBossLoot.
 It is the workhorse of the mod and allows the loot tables to be displayed any way anywhere in any mod.
 ]]
-function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
+function AtlasLoot_ShowItemsFrame(dataID, dataSourceString, title)
 	if not dataID then return end
 
-	if AtlasLootItemsFrame.refresh and (dataID ~= AtlasLootItemsFrame.refresh[1] or dataSource ~= AtlasLootItemsFrame.refresh[2]) then
+	if AtlasLootItemsFrame.refresh and (dataID ~= AtlasLootItemsFrame.refresh[1] or dataSourceString ~= AtlasLootItemsFrame.refresh[2]) then
 		AtlasLootItemsFrame.refreshCount = 0
 	end
 
@@ -589,26 +588,25 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 	-- Hide the Filter Check-Box
 	AtlasLootFilterCheck:Hide()
 
-	local wlPage, wlPageMax = 1, 1
-	local dataSourceString = dataSource
+	local page, pageMax = 1, 1
+	local dataSource = AtlasLoot_Data
 	if dataID == "SearchResult" or dataID == "WishList" then
 		-- Ditch the Quicklook selector
 		AtlasLoot_QuickLooks:Hide()
 		AtlasLootQuickLooksButton:Hide()
 		-- Match the page number to display
-		wlPage = tonumber(string.match(dataSourceString, "%d+$")) or 1
+		page = tonumber(string.match(dataSourceString, "%d+$")) or 1
 		-- Aquiring items of the page
-		dataSource = {}
+		if not dataSource[dataID] then dataSource[dataID] = {} end
 		if dataID == "SearchResult" then
-			dataSource[dataID], wlPageMax = AtlasLoot:GetSearchResultPage(wlPage)
+			dataSource[dataID], pageMax = AtlasLoot:GetSearchResultPage(page)
 		elseif dataID == "WishList" then
-			dataSource[dataID], wlPageMax = AtlasLoot_GetWishListPage(wlPage)
+			dataSource[dataID], pageMax = AtlasLoot_GetWishListPage(page)
 		end
 		-- Make page number reasonable
-		if wlPage < 1 then wlPage = 1 end
-		if wlPage > wlPageMax then wlPage = wlPageMax end
+		if page < 1 then page = 1 end
+		if page > pageMax then page = pageMax end
 	else
-		dataSource = AtlasLoot_Data
 		AtlasLoot_QuickLooks:Show()
 		AtlasLootQuickLooksButton:Show()
 	end
@@ -652,11 +650,6 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 		_G["AtlasLootItem_"..i].spellitemID = 0
 	end
 
-	if AtlasLoot_TableNames[dataID][2] == "Menu" then
-		AtlasLoot_GenerateAtlasMenu(dataID)
-		return
-	end
-
 	--Store data about the state of the items frame to allow minor tweaks or a recall of the current loot page
 	AtlasLootItemsFrame.refresh = { dataID, dataSourceString, title }
 	if dataID ~= "FilterList" then
@@ -664,12 +657,66 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 		AtlasLoot.db.profile.LastBoss = dataID
 	end
 
-	-- Create the loottable
-	if dataID == "SearchResult" or dataID == "WishList" or AtlasLoot_IsLootTableAvailable(dataID) then
-		--Iterate through each item object and set its properties
+	local tableBase = dataSource[dataID]
+
+	if AtlasLoot_TableNames[dataID][2] == "Menu" then
+		-- This is a menu page
 		for i = 1, 30, 1 do
-			--Check for a valid object (that it exists, and that it has a name)
-			local info = dataSource[dataID][i]
+			local info = tableBase[i]
+			if info then
+				local index = info[1]
+				local itemButton = _G["AtlasLootMenuItem_"..index]
+				local iconFrame = _G["AtlasLootMenuItem_"..index.."_Icon"]
+				local nameFrame = _G["AtlasLootMenuItem_"..index.."_Name"]
+				local extraFrame = _G["AtlasLootMenuItem_"..index.."_Extra"]
+				local border = _G["AtlasLootMenuItem_"..index.."_IconBorder"]
+				itemButton.itemTexture = info[3]
+				itemButton.lootpage = info[2]
+				itemButton.container = info.container
+				itemButton.hasItem = false
+				local class = string.upper(info[3])
+				local coords = CLASS_ICON_TCOORDS[class]
+				if coords then
+					iconFrame:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES")
+					iconFrame:SetTexCoord(coords[1], coords[2], coords[3], coords[4])
+				else
+					iconFrame:SetTexture("Interface\\Icons\\"..(info[3] or "INV_Misc_QuestionMark"))
+					iconFrame:SetTexCoord(0, 1, 0, 1)
+				end
+				nameFrame:SetText(AtlasLoot_FixText(info[4] or ""))
+				extraFrame:SetText(AtlasLoot_FixText(info[5] or ""))
+				border:SetVertexColor(1, 1, 1, 1)
+				itemButton.ContainerBorder:SetVertexColor(1, 1, 1, 1)
+				if itemButton.container then
+					border:Hide()
+					itemButton.ContainerBorder:Show()
+					for row = 1, #itemButton.container do
+						for col = 1, #itemButton.container[row] do
+							local itemID = itemButton.container[row][col]
+							if AtlasLoot.CacheItem(itemID) then
+								AtlasLootItemsFrame.queue[itemID] = true
+								AtlasLootItemsFrame.time = 0.5
+							end
+						end
+					end
+					itemButton.Icon:SetWidth(22)
+					itemButton.Icon:SetHeight(22)
+				else
+					border:Show()
+					itemButton.ContainerBorder:Hide()
+					itemButton.Icon:SetWidth(27)
+					itemButton.Icon:SetHeight(27)
+				end
+				itemButton:Show()
+			end
+		end
+		AtlasLootFilterCheck:Hide()
+		AtlasLootItemsFrame_Heroic:Hide()
+		AtlasLoot10Man25ManSwitch:Hide()
+	else
+		-- This is a regular items page
+		for i = 1, 30, 1 do
+			local info = tableBase[i]
 			if info and info[4] ~= "" then
 				local isSpell    = string.sub(info[2], 1, 1) == "s"
 				local itemButton = _G["AtlasLootItem_"..info[1]]
@@ -840,43 +887,45 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 			AtlasLootItemsFrame_Heroic:Enable()
 		end
 
-		--Hide navigation buttons by default, only show what we need
-		AtlasLootItemsFrame_BACK:Hide()
-		AtlasLootItemsFrame_NEXT:Hide()
-		AtlasLootItemsFrame_PREV:Hide()
-		if dataID ~= "SearchResult" and dataID ~= "WishList" then
-			AtlasLoot_BossName:SetText(AtlasLoot_TableNames[dataID][1])
-		else
-			AtlasLoot_BossName:SetText(title)
+	end
+
+	-- Set title text
+	if dataID ~= "SearchResult" and dataID ~= "WishList" then
+		AtlasLoot_BossName:SetText(AtlasLoot_TableNames[dataID][1])
+	else
+		AtlasLoot_BossName:SetText(title)
+	end
+
+	-- Hide navigation buttons by default
+	AtlasLootItemsFrame_BACK:Hide()
+	AtlasLootItemsFrame_NEXT:Hide()
+	AtlasLootItemsFrame_PREV:Hide()
+	-- Determine what nav buttons are required
+	if dataID == "SearchResult" or dataID == "WishList" then
+		if page < pageMax then
+			AtlasLootItemsFrame_NEXT:Show()
+			AtlasLootItemsFrame_NEXT.lootpage = dataID.."Page"..(page + 1)
 		end
-		--Consult the button registry to determine what nav buttons are required
-		if dataID == "SearchResult" or dataID == "WishList" then
-			if wlPage < wlPageMax then
-				AtlasLootItemsFrame_NEXT:Show()
-				AtlasLootItemsFrame_NEXT.lootpage = dataID.."Page"..(wlPage + 1)
-			end
-			if wlPage > 1 then
-				AtlasLootItemsFrame_PREV:Show()
-				AtlasLootItemsFrame_PREV.lootpage = dataID.."Page"..(wlPage - 1)
-			end
-		else
-			local tablebase = dataSource[dataID]
-			if tablebase.Next then
-				AtlasLootItemsFrame_NEXT:Show()
-				AtlasLootItemsFrame_NEXT.lootpage = tablebase.Next
-			end
-			if tablebase.Prev then
-				AtlasLootItemsFrame_PREV:Show()
-				AtlasLootItemsFrame_PREV.lootpage = tablebase.Prev
-			end
-			if tablebase.Back then
-				AtlasLootItemsFrame_BACK:Show()
-				AtlasLootItemsFrame_BACK.lootpage = tablebase.Back
-			end
+		if page > 1 then
+			AtlasLootItemsFrame_PREV:Show()
+			AtlasLootItemsFrame_PREV.lootpage = dataID.."Page"..(page - 1)
+		end
+	else
+		if tableBase.Next then
+			AtlasLootItemsFrame_NEXT:Show()
+			AtlasLootItemsFrame_NEXT.lootpage = tableBase.Next
+		end
+		if tableBase.Prev then
+			AtlasLootItemsFrame_PREV:Show()
+			AtlasLootItemsFrame_PREV.lootpage = tableBase.Prev
+		end
+		if tableBase.Back then
+			AtlasLootItemsFrame_BACK:Show()
+			AtlasLootItemsFrame_BACK.lootpage = tableBase.Back
 		end
 	end
 
-	--For Alphamap and Atlas integration, show a 'close' button to hide the loot table and restore the map view
+	-- For Alphamap and Atlas integration, show a 'close' button to hide the loot table and restore the map view
 	if AtlasLoot.AnchorPoint ~= AtlasLoot.AnchorDefault then
 		AtlasLootItemsFrame_CloseButton:Show()
 	else
@@ -887,147 +936,13 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSource, title)
 		AtlasLoot_HideNoUsableItems()
 	end
 
-	--Anchor the item frame where it is supposed to be
+	-- Anchor the item frame where it is supposed to be
 	AtlasLootItemsFrame:SetParent(_G[AtlasLoot.AnchorPoint[2]])
 	AtlasLootItemsFrame:ClearAllPoints()
 	AtlasLootItemsFrame:SetPoint(AtlasLoot.AnchorPoint[1], AtlasLoot.AnchorPoint[2], AtlasLoot.AnchorPoint[3], AtlasLoot.AnchorPoint[4], AtlasLoot.AnchorPoint[5])
 	AtlasLootItemsFrame:Show()
 
-	if AtlasFrame and AtlasFrame:IsShown() then
-		AtlasLootItemsFrame.activeLootPage = AtlasLoot.db.profile.LastBoss
-		AtlasLoot_AtlasScrollBar_Update()
-	end
-end
-
---[[
-AtlasLoot_GenerateAtlasMenu(dataID, pFrame)
-dataID - Identifier of the loot table to show
-pFrame - Where to anchor the menu
-This function allows menus to be defined in essentially the same way as
-normal loot tables
-]]
-function AtlasLoot_GenerateAtlasMenu(dataID)
-	if AtlasLootItemsFrame.refresh and dataID ~= AtlasLootItemsFrame.refresh[1] then
-		AtlasLootItemsFrame.refreshCount = 0
-	end
-	if AtlasLootItemsFrameContainer:IsShown() and AtlasLootItemsFrame.refreshCount == 0 then
-		AtlasLootItemsFrameContainer:Hide()
-	end
-
-	AtlasLoot.db.profile.LastBoss = dataID
-
-	--Hide UI objects so that only needed ones are shown
-	for i = 1, 30, 1 do
-		_G["AtlasLootMenuItem_"..i]:Hide()
-		_G["AtlasLootItem_"..i]:Hide()
-	end
-	--Store data about the state of the items frame to allow minor tweaks or a recall of the current loot page
-	AtlasLootItemsFrame.refresh = { dataID, "", AtlasLoot_TableNames[dataID][1] or "" }
-	AtlasLootItemsFrame.refreshOri = { dataID, "", AtlasLoot_TableNames[dataID][1] or "" }
-
-	for i = 1, 30, 1 do
-		local info = AtlasLoot_Data[dataID][i]
-		if info then
-			local index = info[1]
-			local itemButton = _G["AtlasLootMenuItem_"..index]
-			local iconFrame = _G["AtlasLootMenuItem_"..index.."_Icon"]
-			local nameFrame = _G["AtlasLootMenuItem_"..index.."_Name"]
-			local extraFrame = _G["AtlasLootMenuItem_"..index.."_Extra"]
-			local border = _G["AtlasLootMenuItem_"..index.."_IconBorder"]
-
-			itemButton.itemTexture = info[3]
-			itemButton.lootpage = info[2]
-			itemButton.container = info.container
-			itemButton.hasItem = false
-			local class = string.upper(info[3])
-			local coords = CLASS_ICON_TCOORDS[class]
-			if coords then
-				iconFrame:SetTexture("Interface\\GLUES\\CHARACTERCREATE\\UI-CHARACTERCREATE-CLASSES")
-				iconFrame:SetTexCoord(coords[1], coords[2], coords[3], coords[4])
-			else
-				iconFrame:SetTexture("Interface\\Icons\\"..(info[3] or "INV_Misc_QuestionMark"))
-				iconFrame:SetTexCoord(0, 1, 0, 1)
-			end
-			nameFrame:SetText(AtlasLoot_FixText(info[4] or ""))
-			extraFrame:SetText(AtlasLoot_FixText(info[5] or ""))
-			border:SetVertexColor(1, 1, 1, 1)
-			itemButton.ContainerBorder:SetVertexColor(1, 1, 1, 1)
-			if itemButton.container then
-				border:Hide()
-				itemButton.ContainerBorder:Show()
-				for row = 1, #itemButton.container do
-					for col = 1, #itemButton.container[row] do
-						local itemID = itemButton.container[row][col]
-						if AtlasLoot.CacheItem(itemID) then
-							AtlasLootItemsFrame.queue[itemID] = true
-							AtlasLootItemsFrame.time = 0.5
-						end
-					end
-				end
-				itemButton.Icon:SetWidth(22)
-				itemButton.Icon:SetHeight(22)
-			else
-				border:Show()
-				itemButton.ContainerBorder:Hide()
-				itemButton.Icon:SetWidth(27)
-				itemButton.Icon:SetHeight(27)
-			end
-
-			itemButton:Show()
-		end
-	end
-
-	AtlasLoot_BossName:SetText(AtlasLoot_TableNames[dataID][1])
-
-	AtlasLootFilterCheck:Hide()
-
-	AtlasLootItemsFrame_Heroic:Hide()
-	AtlasLoot10Man25ManSwitch:Hide()
-
-	local bigraidCheck = string.sub(dataID, string.len(dataID) - 4, string.len(dataID))
-	local bigraiddataID = dataID.."25Man"
-	if bigraidCheck == "25Man" then
-		AtlasLoot10Man25ManSwitch:SetText(AL["Show 10 Man Loot"])
-		AtlasLoot10Man25ManSwitch.lootpage = string.sub(dataID, 1, string.len(dataID) - 5)
-		AtlasLoot10Man25ManSwitch:Show()
-	elseif AtlasLoot_Data[bigraiddataID] then
-		AtlasLoot10Man25ManSwitch:SetText(AL["Show 25 Man Loot"])
-		AtlasLoot10Man25ManSwitch.lootpage = bigraiddataID
-		AtlasLoot10Man25ManSwitch:Show()
-	end
-
-	--Hide navigation buttons by default, only show what we need
-	AtlasLootItemsFrame_BACK:Hide()
-	AtlasLootItemsFrame_NEXT:Hide()
-	AtlasLootItemsFrame_PREV:Hide()
-
-	local tablebase = AtlasLoot_Data[dataID]
-	if tablebase.Next then
-		AtlasLootItemsFrame_NEXT:Show()
-		AtlasLootItemsFrame_NEXT.lootpage = tablebase.Next
-	end
-	if tablebase.Prev then
-		AtlasLootItemsFrame_PREV:Show()
-		AtlasLootItemsFrame_PREV.lootpage = tablebase.Prev
-	end
-	if tablebase.Back then
-		AtlasLootItemsFrame_BACK:Show()
-		AtlasLootItemsFrame_BACK.lootpage = tablebase.Back
-	end
-
-	--For Alphamap and Atlas integration, show a 'close' button to hide the loot table and restore the map view
-	if AtlasLoot.AnchorPoint ~= AtlasLoot.AnchorDefault then
-		AtlasLootItemsFrame_CloseButton:Show()
-	else
-		AtlasLootItemsFrame_CloseButton:Hide()
-	end
-
-	--Anchor the item frame where it is supposed to be
-	AtlasLootItemsFrame:SetParent(_G[AtlasLoot.AnchorPoint[2]])
-	AtlasLootItemsFrame:ClearAllPoints()
-	AtlasLootItemsFrame:SetPoint(AtlasLoot.AnchorPoint[1], AtlasLoot.AnchorPoint[2], AtlasLoot.AnchorPoint[3], AtlasLoot.AnchorPoint[4], AtlasLoot.AnchorPoint[5])
-	AtlasLootItemsFrame:Show()
-
+	-- Update buttons in Atlas scroll frame
 	if AtlasFrame and AtlasFrame:IsShown() then
 		AtlasLootItemsFrame.activeLootPage = AtlasLoot.db.profile.LastBoss
 		AtlasLoot_AtlasScrollBar_Update()
