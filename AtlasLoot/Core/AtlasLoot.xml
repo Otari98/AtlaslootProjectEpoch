@@ -161,7 +161,7 @@
 		</Layers>
 	</Frame>
 
-	<Frame name="AtlasLootItemsFrame" parent="UIParent" hidden="true">
+	<Frame name="AtlasLootItemsFrame" parent="UIParent" hidden="true" enableMouse="false">
 		<Size x="510" y="510"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
@@ -605,6 +605,7 @@
 			<OnLoad function="AtlasLootItemsFrame_OnLoad"/>
 			<OnUpdate function="AtlasLootItemsFrame_OnUpdate"/>
 			<OnEvent function="AtlasLootItemsFrame_OnEvent"/>
+			<OnShow function="AtlasLootItemsFrame_OnShow"/>
 			<OnMouseWheel>
 				if delta > 0 then
 					if AtlasLootItemsFrame_NEXT:IsShown() then
@@ -616,18 +617,6 @@
 					end
 				end
 			</OnMouseWheel>
-			<OnDragStart>
-				local parent = self:GetParent()
-				if parent:IsMovable() then
-					parent:StartMoving()
-				end
-			</OnDragStart>
-			<OnDragStop>
-				self:GetParent():StopMovingOrSizing()
-			</OnDragStop>
-			<OnMouseDown>
-				CloseDropDownMenus()
-			</OnMouseDown>
 		</Scripts>
 	</Frame>
 

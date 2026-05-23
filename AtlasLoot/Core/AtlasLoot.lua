@@ -1265,3 +1265,7 @@ function AtlasLootItemsFrame_OnUpdate(self, elapsed)
 		end
 	end
 end
+
+function AtlasLootItemsFrame_OnShow(self)
+	self:SetFrameLevel(self:GetParent():GetFrameLevel() + 3)
+end
