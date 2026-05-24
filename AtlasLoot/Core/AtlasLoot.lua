@@ -887,6 +887,9 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSourceString, title)
 			AtlasLootItemsFrame_Heroic:Enable()
 		end
 
+		if ATLASLOOT_FILTER_ENABLE == true and dataID ~= "FilterList" then
+			AtlasLoot_HideNoUsableItems()
+		end
 	end
 
 	-- Set title text
@@ -930,10 +933,6 @@ function AtlasLoot_ShowItemsFrame(dataID, dataSourceString, title)
 		AtlasLootItemsFrame_CloseButton:Show()
 	else
 		AtlasLootItemsFrame_CloseButton:Hide()
-	end
-
-	if ATLASLOOT_FILTER_ENABLE == true and dataID ~= "FilterList" then
-		AtlasLoot_HideNoUsableItems()
 	end
 
 	-- Anchor the item frame where it is supposed to be
