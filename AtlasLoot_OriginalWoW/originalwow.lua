@@ -1077,9 +1077,8 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 		{ 3, 60520, "", "=q3=Belt of Conjuring", "=ds=#s10#, #a2#", "", ""};
 		{ 4, 60582, "", "=q3=Prestidigitation", "=ds=#h3#, #w4#", "", ""};
 		{ 5, 60526, "", "=q3=Bonzo´s Brass Buttons", "=ds=#s11#, #a4#", "", ""};
-		{ 6, 60571, "", "=q3=Masterwork Salt Shaker", "=ds=#s14#", "", ""};
-		{ 7, 60543, "", "=q3=Emergency Escape Plan", "=ds=#s14#", "", ""};
-		{ 8, 60548, "", "=q3=Frozen Bite", "=ds=#h3#, #w4#", "", ""};
+		{ 6, 60543, "", "=q3=Emergency Escape Plan", "=ds=#s14#", "", ""};
+		{ 7, 60548, "", "=q3=Frozen Bite", "=ds=#h3#, #w4#", "", ""};
 		Next = "BHIsalien";
 		Prev = "BHDakmal";
 	};
