@@ -73,7 +73,8 @@ AtlasLoot_Data["ENGINEERINGMENU"] = {
 	{ 8, "Goblin1", "Achievement_goblinhead", "=ds="..GetSpellInfo(20221), "" },
 	{ 16, "EngineeringArmor1", "inv_helmet_47", "=ds="..BabbleInventory["Armor"], "" },
 	{ 17, "EngineeringItemEnhancements1", "inv_misc_spyglass_02", "=ds="..AL["Item Enhancements"], "" },
-	{ 19, "EngineeringReagents1", "inv_misc_ammo_gunpowder_02", "=ds="..AL["Reagents"], "" },
+	{ 18, "EngineeringTrinkets1", "inv_jewelry_talisman_08", "=ds="..AL["Trinkets"], "" },
+	{ 20, "EngineeringReagents1", "inv_misc_ammo_gunpowder_02", "=ds="..AL["Reagents"], "" },
 	Back = "CRAFTINGMENU",
 }
 

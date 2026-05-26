@@ -5,32 +5,32 @@ local BabbleZone = AtlasLoot_GetLocaleLibBabble("LibBabble-Zone-3.0")
 
 AtlasLootWBBossButtons = {
 	Corruptedancient = {
-		"Corruptedancient";
-	};
+		"Corruptedancient",
+	},
 	Gonzor = {
-		"Gonzor";
-	};
+		"Gonzor",
+	},
 	Kinggnok = {
-		"Kinggnok";
-	};
+		"Kinggnok",
+	},
 	KingMosh = {
-		"KingMosh";
-	};
+		"KingMosh",
+	},
 	Silithidlurker = {
-		"Silithidlurker";
-	};
+		"Silithidlurker",
+	},
 	Volchan = {
-		"Volchan";
-	};
+		"Volchan",
+	},
 	Azuregos = {
-		"Azuregos";
-	};
+		"Azuregos",
+	},
 	WinterspringBoss = {
-		"WinterspringBoss";
-	};
+		"WinterspringBoss",
+	},
 	LordKazzak = {
-		"LordKazzak";
-	};
+		"LordKazzak",
+	},
 }
 
 

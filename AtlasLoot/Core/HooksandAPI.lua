@@ -4,6 +4,7 @@ File containing all the Atlas replacement functions and the External API
 
 --Establish number of boss lines in the Atlas frame for scrolling
 local BOSS_SCROLL_LIST = {}
+local buttons = { "AtlasLootBossButtons", "AtlasLootWBBossButtons", "AtlasLootBattlegrounds" }
 
 --[[
 AtlasLoot_SetupForAtlas:
@@ -30,7 +31,6 @@ AtlasLootBoss_OnClick:
 Invoked whenever a boss line in Atlas is clicked
 Shows a loot page if one is associated with the button
 ]]
-local buttons = { AtlasLootBossButtons, AtlasLootWBBossButtons, AtlasLootBattlegrounds }
 function AtlasLootBoss_OnClick(self)
     local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone]
     local id = self.originalIndex
@@ -42,8 +42,9 @@ function AtlasLootBoss_OnClick(self)
         AtlasLoot_AtlasScrollBar_Update()
     else
         local lootPage
-        for _, dataSource in ipairs(buttons) do
-            if dataSource[zoneID] and dataSource[zoneID][id] and dataSource[zoneID][id] ~= "" then
+        for _, value in ipairs(buttons) do
+            local dataSource = _G[value]
+            if dataSource and dataSource[zoneID] and dataSource[zoneID][id] and dataSource[zoneID][id] ~= "" then
                 lootPage = dataSource[zoneID][id]
                 break
             end
@@ -185,7 +186,6 @@ AtlasLoot_AtlasScrollBar_Update:
 Hooks the Atlas scroll frame.
 Required as the Atlas function cannot deal with the AtlasLoot button template or the added Atlasloot entries
 ]]
-local buttons = { AtlasLootBossButtons, AtlasLootWBBossButtons, AtlasLootBattlegrounds }
 function AtlasLoot_AtlasScrollBar_Update()
     AtlasLoot.hooks.AtlasScrollBar_Update()
     local zoneID = ATLAS_DROPDOWNS[AtlasOptions.AtlasType][AtlasOptions.AtlasZone]
@@ -198,8 +198,9 @@ function AtlasLoot_AtlasScrollBar_Update()
         local originalIndex = BOSS_SCROLL_LIST[index] -- Original line number before filtering/sorting.
         if loot and originalIndex and index <= ATLAS_CUR_LINES then
             local lootPage
-            for _, dataSource in ipairs(buttons) do
-                if dataSource[zoneID] and dataSource[zoneID][originalIndex] and dataSource[zoneID][originalIndex] ~= "" then
+            for _, value in ipairs(buttons) do
+                local dataSource = _G[value]
+                if dataSource and dataSource[zoneID] and dataSource[zoneID][originalIndex] and dataSource[zoneID][originalIndex] ~= "" then
                     lootPage = dataSource[zoneID][originalIndex]
                     break
                 end

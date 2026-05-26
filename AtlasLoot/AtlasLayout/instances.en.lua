@@ -1256,5 +1256,3 @@ AtlasLootBossButtons = {
     },
 
 }
-
-AtlasLootWBBossButtons = {}
