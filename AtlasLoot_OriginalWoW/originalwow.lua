@@ -441,7 +441,9 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 		{ 6, 11809, "", "=q3=Flame Wrath", "=ds=#w7#", "", "18.69%"};
 		{ 7, 60254, "", "=q3=Staff of Fiery Diplomacy", "=ds=#w9#", "", ""};
 		{ 8, 60217, "", "=q3=Boots of Natural Fire", "", "", ""};
-		{ 10, 23320, "", "=q3=Tablet of Flame Shock VI", "=ds=#e10# =q1=#m1# =ds=#c7#"};
+		{ 9, 60688, "", "=q3=Emberguard Wand", "=ds=#w12#", "", ""};
+		-- { 10, 23320, "", "=q3=Tablet of Flame Shock VI", "=ds=#e10# =q1=#m1# =ds=#c7#"};
+		-- moved to Pyroguard Emberseer UBRS until confirmation that it drops in BRD too
 		Next = "BRDPanzor";
 		Prev = "BRDGuzzler2";
 	};
@@ -728,6 +730,7 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 		{ 2, 13210, "", "=q3=Pads of the Dread Wolf", "=ds=#s12#, #a2#", "", "9.88%"};
 		{ 3, 13211, "", "=q3=Slashclaw Bracers", "=ds=#s8#, #a3#", "", "20.32%"};
 		{ 4, 13212, "", "=q3=Halycon's Spiked Collar", "=ds=#s2#", "", "18.23%"};
+		{ 5, 60409, "", "=q3=Enchanted Worg Tooth", "=ds=#s2#", "", ""};
 		Next = "LBRSBashguud";
 		Prev = "LBRSSlavener";
 	};
@@ -797,7 +800,8 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 		{ 5, 60691, "", "=q3=Shard of The Pyroguard", "=ds=#h3#, #w4#", "", ""};
 		{ 7, 17322, "", "=q1=Eye of the Emberseer", "=ds=#m3#", "", "100%"};
 		{ 8, 21988, "", "=q1=Ember of Emberseer", "=ds=#m3#"};
-		{ 16, 16672, "", "=q3=Gauntlets of Elements", "=ds=#s9#, #a3# (D1, #c7#)", "", "14.23%"};
+		{16, 16672, "", "=q3=Gauntlets of Elements", "=ds=#s9#, #a3# (D1, #c7#)", "", "14.23%"};
+		{17, 23320, "", "=q3=Gauntlets of Elements", "=ds=#s9#, #a3# (D1, #c7#)", "", "14.23%"};
 		Next = "UBRSSolakar";
 	};
 
@@ -1118,24 +1122,27 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 	};
 
 	AtlasLoot_Data["BHAstilosTheHollow"] = {
-		{ 1, 16682, "", "=q3=Magister's Boots", "=ds=#s12#, #a1# (D1, #c3#)", "", "10.86%"};
-		{ 3, 60623, "", "=q3=Will o' the Wisps", "=ds=#s14#", "", ""};
-		{ 4, 60521, "", "=q3=Black Mold Shoulderpads", "=ds=#s3#, #a2#", "", ""};
-		{ 5, 60534, "", "=q3=Coif of Hollowed Memories", "=ds=#s1#, #a3#", "", ""};
-		{ 6, 60599, "", "=q3=Shadowfrost Scepter", "=ds=#w9#", "", ""};
-		{ 7, 60553, "", "=q3=Haunted Bone Armor", "=ds=#s5#, #a4#", "", ""};
-		{ 8, 60586, "", "=q3=Rising Moon", "=ds=#h3#, #w6#", "", ""};
-		{ 9, 60569, "", "=q3=Lordaeron Signet", "=ds=#s13#", "", ""};
-		{ 11, 60590, "", "=q3=Rune Warder´s Loins", "=ds=#s11#, #a1#", "", ""};
+		{ 1, 60623, "", "=q3=Will o' the Wisps", "=ds=#s14#", "", ""};
+		{ 2, 60521, "", "=q3=Black Mold Shoulderpads", "=ds=#s3#, #a2#", "", ""};
+		{ 3, 60534, "", "=q3=Coif of Hollowed Memories", "=ds=#s1#, #a3#", "", ""};
+		{ 4, 60599, "", "=q3=Shadowfrost Scepter", "=ds=#w9#", "", ""};
+		{ 5, 60553, "", "=q3=Haunted Bone Armor", "=ds=#s5#, #a4#", "", ""};
+		{ 6, 60586, "", "=q3=Rising Moon", "=ds=#h3#, #w6#", "", ""};
+		{ 7, 60569, "", "=q3=Lordaeron Signet", "=ds=#s13#", "", ""};
+		{ 8, 60616, "", "=q3=Wand of Soothing Waters", "=ds=#w12#", "", ""};
+
+		{10, 60590, "", "=q3=Rune Warder's Loins", "=ds=#s11#, #a1#", "", ""};
+		
+		{16, 16682, "", "=q3=Magister's Boots", "=ds=#s12#, #a1# (D1, #c3#)", "", "10.86%"};
 		Next = "BHNazrasash";
 		Prev = "BHGlagut";
 	};
 
 	AtlasLoot_Data["BHNazrasash"] = {
-		{ 1, 60576, "", "=q3=Nazrasash´s Shoulderguards", "=ds=#s3#, #a3#", "", ""};
+		{ 1, 60576, "", "=q3=Nazrasash's Shoulderguards", "=ds=#s3#, #a3#", "", ""};
 		{ 2, 60516, "", "=q3=Anti-Arcane Sabatons", "=ds=#s12#, #a4#", "", ""};
-		{ 3, 60610, "", "=q3=Sunderer´s Mastery", "=ds=#s14#", "", ""};
-		{ 4, 60612, "", "=q3=Tome of Naz´jatar", "=ds=#s15#", "", ""};
+		{ 3, 60610, "", "=q3=Sunderer's Mastery", "=ds=#s14#", "", ""};
+		{ 4, 60612, "", "=q3=Tome of Naz'jatar", "=ds=#s15#", "", ""};
 		{ 5, 60554, "", "=q3=Idol of Highborne Rejection", "=ds=#s16#", "", ""};
 		{ 6, 60598, "", "=q3=Seashell Cuffs", "=ds=#s8#, #a1#", "", ""};
 		{ 7, 60575, "", "=q3=Naga Scale Leggings", "=ds=#s11#, #a1#", "", ""};
@@ -1698,10 +1705,12 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 	};
 
 	AtlasLoot_Data["SCHOLOBloodStewardofKirtonos"] = {
-		{ 1, 60448, "", "=q3=Gargoyle´s Bane", "=ds=#w3#", "", ""};
-		{ 2, 60449, "", "=q3=Gargoyle´s Bangle", "=ds=#s13#", "", ""};
+		{ 1, 60466, "", "=q2=Wood Carved Staff", "=ds=#w9#", "", ""};
+		{ 2, 60446, "", "=q2=Fel Enchanted Blade", "=ds=#h1#, #w4#", "", ""};
 		{ 3, 60453, "", "=q2=Kufi", "=ds=#s1#", "", ""};
-		{ 5, 13523, "", "=q1=Blood of Innocents", "=ds=#m3#", "", "100%"};
+		{ 4, 60465, "", "=q3=Wizard's Cape", "=ds=#s4#", "", ""};
+		
+		{16, 13523, "", "=q1=Blood of Innocents", "=ds=#m3#", "", "100%"};
 		Next = "SCHOLOKirtonostheHerald";
 		Prev = "SCHOLOQuestItems";
 	};
@@ -1716,7 +1725,9 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 		{ 7, 14024, "", "=q3=Frightalon", "=ds=#h1#, #w4#", "", "15.55%"};
 		{ 8, 13983, "", "=q3=Gravestone War Axe", "=ds=#h2#, #w1#", "", "12.78%"};
 		{ 9, 60448, "", "=q3=Gargoyle's Bane", "=ds=#w3#", "", ""};
-		{ 16, 16734, "", "=q3=Boots of Valor", "=ds=#s12#, #a4# (D1, #c9#)", "", "11.12%"};
+		{10, 60449, "", "=q3=Gargoyle's Bangle", "=ds=#s13#", "", ""};
+		
+		{16, 16734, "", "=q3=Boots of Valor", "=ds=#s12#, #a4# (D1, #c9#)", "", "11.12%"};
 		Next = "SCHOLOJandiceBarov";
 		Prev = "SCHOLOBloodStewardofKirtonos";
 	};
@@ -2193,9 +2204,12 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 		{ 5, 60485, "", "=q3=Blessed-Thread Gloves", "=ds=#s9#, #a1#", "", ""};
 		{ 6, 22897, "", "=q3=Tome of Conjure Food VII", "=ds=#e10# =q1=#m1# =ds=#c3#", "", "4.86%"};
 		{ 8, 12811, "", "=q2=Righteous Orb", "=ds=#e8#", "", "61.3%"};
-		{ 10, 0, "INV_Box_01", "=q6=#x11#", ""};
-		{ 11, 14679, "", "=q1=Of Love and Family", "=ds=#m3#"};
-		{ 16, 16692, "", "=q3=Devout Gloves", "=ds=#s9#, #a1# (D1, #c5#)", "", "12.46%"};
+		{ 9, 60483, "", "=q3=Ardent Helmet", "=ds=#s1#, #a4#", "", ""};
+
+		{11, 0, "INV_Box_01", "=q6=#x11#", ""};
+		{12, 14679, "", "=q1=Of Love and Family", "=ds=#m3#"};
+		
+		{16, 16692, "", "=q3=Devout Gloves", "=ds=#s9#, #a1# (D1, #c5#)", "", "12.46%"};
 		Next = "STRATBalnazzar";
 		Prev = "STRATCannonMasterWilley";
 	};
@@ -2253,9 +2267,11 @@ local BabbleFaction = AtlasLoot_GetLocaleLibBabble("LibBabble-Faction-3.0")
 		{ 7, 13535, "", "=q2=Coldtouch Phantom Wraps", "=ds=#s5#, #a1#", "", "9.84%"};
 		{ 8, 13537, "", "=q2=Chillhide Bracers", "=ds=#s8#, #a2#", "", "9.71%"};
 		{ 9, 13538, "", "=q2=Windshrieker Pauldrons", "=ds=#s3#, #a3#", "", "9.75%"};
-		{ 10, 13539, "", "=q2=Banshee's Touch", "=ds=#s9#, #a4#", "", "8.27%"};
-		{ 11, 13514, "", "=q2=Wail of the Banshee", "=ds=#m8#", "", "7.73%"};
-		{ 16, 16704, "", "=q3=Dreadmist Sandals", "=ds=#s12#, #a1# (D1, #c8#)", "", "13.16%"};
+		{10, 13539, "", "=q2=Banshee's Touch", "=ds=#s9#, #a4#", "", "8.27%"};
+		{11, 13514, "", "=q2=Wail of the Banshee", "=ds=#m8#", "", "7.73%"};
+		{12, 60210, "", "=q3=Codex: Levitate II", "=ds=#e10#, =q1=#m1# #c5#", "", ""};
+
+		{16, 16704, "", "=q3=Dreadmist Sandals", "=ds=#s12#, #a1# (D1, #c8#)", "", "13.16%"};
 		Next = "STRATBlackGuardSwordsmith";
 		Prev = "STRATStonespine";
 	};
