@@ -48,7 +48,7 @@ end
 
 local atlasLootVersion = tostring(GetAddOnMetadata("AtlasLoot", "Version") or "")
 atlasLootVersion = string.gsub(atlasLootVersion, "^[^%d]*", "")
-local alMajor, alMinor, alFix = AtlasLoot_StrSplit(".", atlasLootVersion)
+local alMajor, alMinor, alFix = strsplit(".", atlasLootVersion)
 alMajor = tonumber(alMajor) or tonumber(EPOCH_VERSION_MAJOR) or 0
 alMinor = tonumber(alMinor) or tonumber(EPOCH_VERSION_MINOR) or 0
 alFix = tonumber(alFix) or tonumber(EPOCH_VERSION_BOSSES) or 0
