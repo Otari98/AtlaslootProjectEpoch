@@ -2,7 +2,7 @@
 ## Title: AtlasLoot_Crafting
 ## Notes: Epoch AtlasLoot
 ## Author: Hegarol, Raynbock/Felius(Epoch), Reneas(Epoch)
-## Version: v1.13.4
+## Version: v1.13.5
 ## X-License: GPL v2
 ## X-Website: https://github.com/reneas/AtlaslootProjectEpoch
 ## Dependencies: AtlasLoot
